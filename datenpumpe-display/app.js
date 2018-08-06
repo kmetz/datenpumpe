@@ -108,7 +108,7 @@ parser.on('data', (data) => {
     pumpLevel = Number.parseInt(split[1].trim());
      if (Number.isInteger(pumpLevel)) {
       connection.sendUTF(pumpLevel.toString());
-      // console.log('–> ' + pumpLevel.toString());
+      console.log('–> ' + pumpLevel.toString());
     }
   }
 });

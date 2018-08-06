@@ -5,35 +5,36 @@
     <title>Datenpumpe</title>
     <style>
     	body, html {
-    		background: white;
+    		background: black;
     		color: white;
     		margin: 0;
     		padding: 0;
     	}
     	#main {
     		overflow: hidden;
-    		height: 600px;
+    		width: 1024px;
+        height: 768px;
+        margin: auto;
+        position: relative;
     	}
     	#content {
     		border: none;
-    		opacity: 0;
     	}
     	#overlay {
-		    position: absolute;
-		    height: 600px;
-		    box-shadow: inset 0 0 10px 300px rgb(5,200,255);
-		    width: 100%;
-		    top: 0px;
-    	}
-    	#content, #overlay {
-    		transition: all 0.2s;
+        position: absolute;
+        border-radius: 100%;
+        top: -256px;
+        left: -128px;
+        width: 1280px;
+        height: 1280px;
+		    box-shadow: inset 0 0 10px 640px black;
     	}
   	</style>
   </head>
 
   <body>
     <div id="main">
-   		<iframe id="content" src="" width="100%" height="600" frameBorder="0"></iframe>
+   		<iframe id="content" src="" width="1024" height="768" frameBorder="0"></iframe>
    		<div id="overlay"></div>
  		</div>
 
