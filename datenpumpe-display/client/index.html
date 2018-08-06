@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Datenpumpe</title>
+    <style>
+    	body, html {
+    		background: white;
+    		color: white;
+    		margin: 0;
+    		padding: 0;
+    	}
+    	#main {
+    		overflow: hidden;
+    		height: 600px;
+    	}
+    	#content {
+    		border: none;
+    		opacity: 0;
+    	}
+    	#overlay {
+		    position: absolute;
+		    height: 600px;
+		    box-shadow: inset 0 0 10px 300px rgb(5,200,255);
+		    width: 100%;
+		    top: 0px;
+    	}
+    	#content, #overlay {
+    		transition: all 0.2s;
+    	}
+  	</style>
+  </head>
+
+  <body>
+    <div id="main">
+   		<iframe id="content" src="" width="100%" height="600" frameBorder="0"></iframe>
+   		<div id="overlay"></div>
+ 		</div>
+
+		<script src="./client.js"></script>
+  </body>
+</html>
