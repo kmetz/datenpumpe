@@ -46,7 +46,7 @@ connection.onmessage = function (message) {
     content.style.opacity = EasingFunctions.easeOutQuad(visibility);
     overlay.style.boxShadow =
       'black 0 0 ' + (70 * visibility) + 'px ' + (640 * (1 - visibility)) + 'px inset, ' +
-      'black 0 0 0px ' + (640 * (1 - visibility)) + 'px inset';
+      'blue 0 0 3px ' + (640 * (1 - visibility)) + 'px inset';
     //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
     content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
 
