@@ -27,7 +27,7 @@ webServer.use('/content', express.static(__dirname + '/content'));
 webServer.get('/content', function(req,res) {
   console.log('GET /content');
   // Pick random content when offline, or newest.
-  exec(isOffline ? 'cd content; ls -d1 R_* | sort -R | head -n 1' : 'cd content; ls -td1 R_* | head -n 1',
+  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
     (err, stdout, stderr) => {
     if (!err && stdout.trim().length > 0) {
       let location = '/content/' + stdout.trim();
