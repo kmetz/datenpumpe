@@ -2,8 +2,8 @@ const randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige
 const cachedContentDirs = 10;
 
 const argv = require('minimist')(process.argv.slice(2));
-const webServerPort = ('webServerPort' in argv) ? argv.webServerPort : 8080;
-const webSocketServerPort = ('webSocketServerPort' in argv) ? argv.webSocketServerPort : 8081;
+const webServerPort = 8080;
+const webSocketServerPort = 8081;
 const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/tty.usbmodem2161051';
 
 
