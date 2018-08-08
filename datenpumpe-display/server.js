@@ -1,18 +1,18 @@
-var randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
-var cachedContentDirs = 10;
+const randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
+const cachedContentDirs = 10;
 
-var webServerPort = 8080;
-var webSocketServerPort = 8081;
-var pumpLevelSerialPort = '/dev/tty.usbmodem2161051';
+const webServerPort = 8080;
+const webSocketServerPort = 8081;
+const pumpLevelSerialPort = '/dev/tty.usbmodem2161051';
 
 // Web server ---------------------------------------------------------------
 
-var express = require('express');
-var webServer = express();
+const express = require('express');
+const webServer = express();
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
-var isOffline = false;
+let isOffline = false;
 
 console.log('Content dir: '+ __dirname + '/content/');
 
@@ -28,7 +28,7 @@ webServer.get('/content', function(req,res) {
   exec(isOffline ? 'cd content; ls -d1 R_* | sort -R | head -n 1' : 'cd content; ls -td1 R_* | head -n 1',
     (err, stdout, stderr) => {
     if (!err && stdout.trim().length > 0) {
-      var location =  '/content/' + stdout.trim();
+      let location = '/content/' + stdout.trim();
       res.redirect(302, location);
       console.log('302 ––> ' + location);
     }
@@ -39,7 +39,7 @@ webServer.get('/content', function(req,res) {
   });
 
   // Download new content (try to)
-  var uuid = uuidv1();
+  let uuid = uuidv1();
   console.log('Downloading new content to _' + uuid + ' ...');
   exec('wget --adjust-extension --span-hosts --convert-links --no-directories --page-requisites -e robots=off '
     + '--directory-prefix=' + __dirname + '/content/_' + uuid + ' '
@@ -72,15 +72,15 @@ webServer.listen(webServerPort, () => {
 
 // Send pump level from serial port to client via WebSocket -----------------
 
-var connection = {};
-var pumpLevel = 0;
+let connection = {};
+let pumpLevel = 0;
 
-var webSocketServer = require('websocket').server;
-var http = require('http');
-var wsHttpServer = http.createServer(function(request, response) {
+const webSocketServer = require('websocket').server;
+const http = require('http');
+const wsHttpServer = http.createServer(function(request, response) {
 });
 wsHttpServer.listen(webSocketServerPort, () => {});
-var socketServer = new webSocketServer({
+const socketServer = new webSocketServer({
   httpServer: wsHttpServer
 });
 
@@ -91,20 +91,20 @@ socketServer.on('request', (request) => {
 });
 
 
-var SerialPort = require('serialport');
-var serial = new SerialPort(pumpLevelSerialPort, { baudRate: 9600 });
+const SerialPort = require('serialport');
+const serial = new SerialPort(pumpLevelSerialPort, { baudRate: 9600 });
 serial.on('error', function(err) {
   console.log('Error: ', err.message)
 });
 
-const Readline = require('@serialport/parser-readline')
-const parser = serial.pipe(new Readline())
+const Readline = require('@serialport/parser-readline');
+const parser = serial.pipe(new Readline());
 
 parser.on('data', (data) => {
   // console.log('   ' + data);
-  if (Object.keys(connection).length == 0) return;
+  if (Object.keys(connection).length === 0) return;
   split = data.split(':');
-  if (split.length == 2) {
+  if (split.length === 2) {
     pumpLevel = Number.parseInt(split[1].trim());
      if (Number.isInteger(pumpLevel)) {
       connection.sendUTF(pumpLevel.toString());
