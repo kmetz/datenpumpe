@@ -1,7 +1,10 @@
 # Datenpumpe-Display
 
-## 1. Install
+## Requirements
+- node.js 8.11.3+
+
+## Install
 `$ npm install`
 
-## 2. Run
-`$ npm start`
+## Run  
+`$ node server.js --serialPort=/dev/ttyXYZ0`
