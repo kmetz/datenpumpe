@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Datenpumpe</title>
-    <style>
-    	body, html {
-    		background: black;
-    		color: white;
-    		margin: 0;
-    		padding: 0;
-    	}
-    	#main {
-    		overflow: hidden;
-    		width: 1024px;
-        height: 768px;
-        margin: auto;
-        position: relative;
-        background: url('64a9196a102faf69e4ff8284cb3996ca.gif') 0 0 repeat;
-    	}
-    	#content {
-    		border: none;
-    	}
-    	#overlay {
-        position: absolute;
-        border-radius: 100%;
-        top: -256px;
-        left: -128px;
-        width: 1280px;
-        height: 1280px;
-		    box-shadow: inset 0 0 10px 640px black;
-    	}
-  	</style>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title>Datenpumpe</title>
+  <style>
+    body, html {
+      background: black;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
 
-  <body>
-    <div id="main">
-   		<iframe id="content" src="" width="1024" height="768" frameBorder="0"></iframe>
-   		<div id="overlay"></div>
- 		</div>
+    #main {
+      overflow: hidden;
+      width: 1024px;
+      height: 768px;
+      margin: auto;
+      position: relative;
+      background: url('64a9196a102faf69e4ff8284cb3996ca.gif') 0 0 repeat;
+    }
 
-		<script src="./client.js"></script>
-  </body>
+    #content {
+      border: none;
+    }
+
+    #overlay {
+      position: absolute;
+      border-radius: 100%;
+      top: -256px;
+      left: -128px;
+      width: 1280px;
+      height: 1280px;
+      box-shadow: inset 0 0 10px 640px black;
+    }
+  </style>
+</head>
+
+<body>
+<div id="main">
+  <iframe id="content" src="" width="1024" height="768" frameBorder="0"></iframe>
+  <div id="overlay"></div>
+</div>
+
+<script src="./client.js"></script>
+</body>
 </html>
