@@ -8,3 +8,8 @@
 
 ## Run  
 `$ node server.js --serialPort=/dev/ttyXYZ0`
+
+### Args
+- --serialport=/dev/ttyXYZ0
+- --quiet: no logging
+- --verbose: with data logging

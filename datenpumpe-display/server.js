@@ -6,6 +6,7 @@ const webServerPort = 8080;
 const webSocketServerPort = 8081;
 const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/tty.usbmodem2161051';
 
+const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
 
 // Web server ---------------------------------------------------------------
 
@@ -16,7 +17,7 @@ const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
 let isOffline = false;
 
-console.log('Content dir: '+ __dirname + '/content/');
+log('Content dir: '+ __dirname + '/content/');
 
 // Serve client at /
 webServer.use(express.static(__dirname + '/client'));
@@ -25,17 +26,17 @@ webServer.use('/content', express.static(__dirname + '/content'));
 
 // Redirects from /content to actual content.
 webServer.get('/content', function(req,res) {
-  console.log('GET /content');
+  log('GET /content');
   // Pick random content when offline, or newest.
   exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
     (err, stdout, stderr) => {
     if (!err && stdout.trim().length > 0) {
       let location = '/content/' + stdout.trim();
       res.redirect(302, location);
-      console.log('302 ––> ' + location);
+      log('Redirected to ' + location);
     }
     else {
-      console.log('Error: no content available.');
+      log('Error: no content available.');
       res.status(503).send('No content available, please enshure internet connection and try again shortly.');
     }
   });
@@ -67,7 +68,7 @@ webServer.get('/content', function(req,res) {
 
 
 webServer.listen(webServerPort, () => {
-  console.log('Web server listening on port ' + webServerPort + '.');
+  log('Web server listening on port ' + webServerPort + '.');
 });
 
 
@@ -87,30 +88,37 @@ const socketServer = new webSocketServer({
 });
 
 socketServer.on('request', (request) => {
-  console.log((new Date()) + ' WebSocket connection from origin ' + request.origin + '.');
+  log('WebSocket connection from origin ' + request.origin + '.');
   connection = request.accept(null, request.origin);
-  console.log((new Date()) + ' WebSocket connection accepted.');
+  log('WebSocket connection accepted.');
 });
 
 
 const SerialPort = require('serialport');
 const serial = new SerialPort(pumpLevelSerialPort, { baudRate: 9600 });
 serial.on('error', function(err) {
-  console.log('Error: ', err.message)
+  log(err.message)
 });
 
 const Readline = require('@serialport/parser-readline');
 const parser = serial.pipe(new Readline());
 
 parser.on('data', (data) => {
-  // console.log('   ' + data);
   if (Object.keys(connection).length === 0) return;
   split = data.split(':');
   if (split.length === 2) {
     pumpLevel = Number.parseInt(split[1].trim());
      if (Number.isInteger(pumpLevel)) {
       connection.sendUTF(pumpLevel.toString());
-      console.log('–> ' + pumpLevel.toString());
+      log('–> ' + pumpLevel.toString(), 2);
     }
   }
 });
+
+
+// Helpers ----------------------------------
+
+function log(message, level = 1) {
+  if (!loglevel || level > loglevel) return;
+  loglevel <= 1 ? console.log(message) : console.info(message);
+}
