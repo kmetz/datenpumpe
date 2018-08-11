@@ -7,7 +7,7 @@
 `$ npm install`
 
 ## Run  
-`$ node server.js --serialPort=/dev/ttyXYZ0`
+`$ node server.js --serialPort=/dev/tty.usbmodem2161051`
 
 ### Args
 - --serialport=/dev/ttyXYZ0

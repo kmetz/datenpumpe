@@ -4,7 +4,7 @@ const cachedContentDirs = 10;
 const argv = require('minimist')(process.argv.slice(2));
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
-const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/tty.usbmodem2161051';
+const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/ttyACM0';
 
 const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
 
