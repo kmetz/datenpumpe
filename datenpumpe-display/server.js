@@ -8,6 +8,7 @@ const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/tty
 
 const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
 
+
 // Web server ---------------------------------------------------------------
 
 const express = require('express');
@@ -25,7 +26,7 @@ webServer.use(express.static(__dirname + '/client'));
 webServer.use('/content', express.static(__dirname + '/content'));
 
 // Redirects from /content to actual content.
-webServer.get('/content', function(req,res) {
+webServer.get('/content', (req,res) => {
   log('GET /content');
   // Pick random content when offline, or newest.
   exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
