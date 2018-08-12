@@ -50,7 +50,7 @@ connection.onmessage = (message) => {
     //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
     content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
 
-    console.log('–> ' + visibility);
+    // console.log('–> ' + visibility);
   }
 };
 
