@@ -17,26 +17,34 @@
       height: 768px;
       margin: auto;
       position: relative;
-      background: url('res/water-blue-circle.gif') center center no-repeat;
       background-size: cover;
+      /* background: url('res/water-blue-circle.gif') center center no-repeat; */
       /* background: url('res/water-bw.gif') 0 0 repeat; */
-      /* background: url('res/water-caustics.gif') 0 0 repeat; */
+      background: url('res/water-caustics.gif') 0 0 repeat;
     }
-
     #content {
       border: none;
     }
-
     #overlay {
       position: absolute;
-      border-radius: 100%;
+      border-radius: 50%;
       top: -256px;
       left: -128px;
       width: 1280px;
       height: 1280px;
       box-sizing: border-box;
       border: 640px solid black;
-      box-shadow: inset 0 0 12px 3px rgba(0,0,0,0.75);
+    }
+    .wave {
+      position: absolute;
+      border-radius: 50%;
+      top: -256px;
+      left: -128px;
+      width: 1280px;
+      height: 1280px;
+      box-sizing: border-box;
+      box-shadow: inset 0 0 1024px 256px black;
+      transition: transform 3s, opacity 3s;
     }
   </style>
 </head>
