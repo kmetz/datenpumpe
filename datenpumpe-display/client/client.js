@@ -44,9 +44,7 @@ connection.onmessage = (message) => {
     }
     visibility = Math.max(0, pumpLevel - pumpLevelMin) / (pumpLevelMax - pumpLevelMin);
     content.style.opacity = EasingFunctions.easeOutQuad(visibility);
-    overlay.style.boxShadow =
-      'black 0 0 ' + (70 * visibility) + 'px ' + (640 * (1 - visibility)) + 'px inset, ' +
-      'blue 0 0 3px ' + (640 * (1 - visibility)) + 'px inset';
+    overlay.style.border = (640 * (1 - visibility)) + 'px solid black';
     //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
     content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
 
