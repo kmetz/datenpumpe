@@ -75,7 +75,7 @@ connection.onmessage = (message) => {
       let wave = document.createElement('div');
       wave.className = 'wave';
       wave.style.transform = 'scale(0)';
-      wave.style.opacity = '0.2';
+      wave.style.opacity = '0.1';
       main.appendChild(wave);
     }
 
