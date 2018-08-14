@@ -13,13 +13,13 @@
 
     #main {
       overflow: hidden;
-      width: 1024px;
-      height: 768px;
+      width: 1280px;
+      height: 1024px;
       margin: auto;
       position: relative;
       /** / background: url('res/water-blue-circle.gif') center center no-repeat; background-size: cover; /**/
-      /** / background: url('res/water-bw.gif') 0 0 repeat; /**/
-      /**/ background: url('res/water-caustics.gif') 0 0 repeat; /**/
+      /**/ background: url('res/water-bw.gif') 0 0 repeat; /**/
+      /** / background: url('res/water-caustics.gif') 0 0 repeat; /**/
     }
     #content {
       border: none;
@@ -27,20 +27,21 @@
     #overlay {
       position: absolute;
       border-radius: 50%;
-      top: -256px;
-      left: -128px;
-      width: 1280px;
-      height: 1280px;
+      top: -313px;
+      left: -180px;
+      width: 1640px;
+      height: 1640px;
       box-sizing: border-box;
-      border: 640px solid black;
+      border: 820px solid black;
+      box-shadow: inset 0 0 6px 0 black;
     }
     .wave {
       position: absolute;
       border-radius: 50%;
-      top: -256px;
-      left: -128px;
-      width: 1280px;
-      height: 1280px;
+      top: -313px;
+      left: -180px;
+      width: 1640px;
+      height: 1640px;
       box-sizing: border-box;
       /* box-shadow: inset 0 0 1024px 256px black; */
       background: black;
@@ -51,7 +52,7 @@
 
 <body>
 <div id="main">
-  <iframe id="content" src="" width="1024" height="768" frameBorder="0"></iframe>
+  <iframe id="content" src="" width="1280" height="1024" frameBorder="0"></iframe>
   <div id="overlay"></div>
 </div>
 
