@@ -12,7 +12,7 @@ const overlay = document.querySelector('#overlay');
 const drop = document.querySelector('#drop');
 let pumpLevel = 0;
 let reloaded = true;
-let lastPumpLevel = 0.0, visibility = 0.0;
+let lastPumpLevel = 0, visibility = 0.0;
 let wasRaising = false, isRaising = false, strokeWasStarted = false;
 let waves = [];
 let lastWave = {};
@@ -33,57 +33,54 @@ connection.onerror = (error) => {
 
 connection.onmessage = (message) => {
   // console.log('Received message: ' + message.data)
-
   pumpLevel = Number.parseInt(message.data);
-  if (Number.isInteger(pumpLevel) && pumpLevel > 0 && pumpLevel <= pumpLevelMax) {
-    visibility = Math.max(0, pumpLevel - pumpLevelMin) / (pumpLevelMax - pumpLevelMin);
-    wasRaising = isRaising;
-    isRaising = (pumpLevel > lastPumpLevel);
-    lastPumpLevel = pumpLevel;
+  if (!Number.isInteger(pumpLevel) || pumpLevel === lastPumpLevel) {
+    return;
+  }
 
-    // Reload content when below pumpLevelMin.
-    if (pumpLevel < pumpLevelMin) {
-      if (!reloaded) {
-        content.src = '';
-        content.src = contentURL;
-        main.querySelectorAll('.wave').forEach(e => e.parentNode.removeChild(e));
-        reloaded = true;
-      }
+  visibility = Math.max(0, Math.min(pumpLevel, pumpLevelMax) - pumpLevelMin) / (pumpLevelMax - pumpLevelMin);
+  wasRaising = isRaising;
+  isRaising = (pumpLevel > lastPumpLevel);
+  lastPumpLevel = pumpLevel;
+
+  // Reload content when below pumpLevelMin.
+  if (pumpLevel < pumpLevelMin) {
+    if (!reloaded) {
+      content.src = '';
+      content.src = contentURL;
+      main.querySelectorAll('.wave').forEach(e => e.parentNode.removeChild(e));
+      reloaded = true;
     }
-    else {
-      reloaded = false;
+  }
+  else {
+    reloaded = false;
+  }
+
+  // Animate circle.
+  overlay.style.border = (820 * (1 - visibility)) + 'px solid black';
+
+  // Animate content.
+  content.style.opacity = EasingFunctions.easeOutQuad(visibility);
+  //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
+  content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
+
+  // Add waves.
+  if (strokeWasStarted) {
+    strokeWasStarted = false;
+    waves = main.querySelectorAll('.wave');
+    if (waves.length) {
+      lastWave = waves[waves.length - 1];
+      lastWave.style.transform = 'scale(1)';
+      lastWave.style.opacity = '0.0';
     }
-
-    // Animate circle.
-    overlay.style.border = (820 * (1 - visibility)) + 'px solid black';
-
-    // Animate content.
-    content.style.opacity = EasingFunctions.easeOutQuad(visibility);
-    //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
-    content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
-
-    // Add waves.
-    if (strokeWasStarted) {
-      strokeWasStarted = false;
-      waves = main.querySelectorAll('.wave');
-      if (waves.length) {
-        lastWave = waves[waves.length - 1];
-        lastWave.style.transform = 'scale(1)';
-        lastWave.style.opacity = '0.0';
-      }
-    }
-    if (isRaising && !wasRaising) {
-      strokeWasStarted = true;
-      let wave = document.createElement('div');
-      wave.className = 'wave';
-      wave.style.transform = 'scale(0)';
-      wave.style.opacity = '0.1';
-      main.appendChild(wave);
-    }
-
-
-
-    // console.log('–> ' + visibility);
+  }
+  if (isRaising && !wasRaising) {
+    strokeWasStarted = true;
+    let wave = document.createElement('div');
+    wave.className = 'wave';
+    wave.style.transform = 'scale(0)';
+    wave.style.opacity = '0.1';
+    main.appendChild(wave);
   }
 };
 
