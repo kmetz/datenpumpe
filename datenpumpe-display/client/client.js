@@ -57,7 +57,7 @@ connection.onmessage = (message) => {
   }
 
   // Animate circle.
-  overlay.style.border = (820 * (1 - visibility)) + 'px solid black';
+  overlay.style.boxShadow = 'inset 0 0 8px ' + (820 * (1 - visibility)) + 'px black';
 
   // Animate content.
   content.style.opacity = EasingFunctions.easeOutQuad(visibility);
