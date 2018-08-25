@@ -1,12 +1,30 @@
-const randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
-const cachedContentDirs = 10;
-
-const argv = require('minimist')(process.argv.slice(2));
+let randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
+const cachedContentDirs = 100;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
-const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/ttyACM0';
 
+const argv = require('minimist')(process.argv.slice(2));
+const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/ttyACM0';
 const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
+
+
+// Read location query setting from txt file (~/Desktop/location.txt).
+const { URL } = require('url');
+let randomContentURLparsed = new URL(randomContentURL);
+const fs = require('fs');
+const locationTxtPath = require('os').homedir() + '/Desktop/location.txt';
+let location = '';
+try {
+  location = fs.readFileSync(locationTxtPath).toString().replace(/[^a-z0-9_-]/gmi, '');
+} catch (e) {
+  log('Location: ' + e.message);
+}
+if (location.length) {
+  log('Location: ' + location);
+  randomContentURLparsed.search = 'location=' + location;
+}
+log('Content URL: '+ randomContentURLparsed.href);
+
 
 
 // Web server ---------------------------------------------------------------
@@ -26,11 +44,11 @@ webServer.use(express.static(__dirname + '/client'));
 webServer.use('/content', express.static(__dirname + '/content'));
 
 // Redirects from /content to actual content.
-webServer.get('/content', (req,res) => {
+webServer.get('/content', (req, res) => {
   log('GET /content');
   // Pick random content when offline, or newest.
   exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
-    (err, stdout, stderr) => {
+    (err, stdout) => {
     if (!err && stdout.trim().length > 0) {
       let location = '/content/' + stdout.trim();
       res.redirect(302, location);
@@ -38,7 +56,7 @@ webServer.get('/content', (req,res) => {
     }
     else {
       log('Error: no content available.');
-      res.status(503).send('No content available, please enshure internet connection and try again shortly.');
+      res.status(503).send('No content available, please ensure internet connection and try again shortly.');
     }
   });
 
@@ -47,7 +65,7 @@ webServer.get('/content', (req,res) => {
   console.log('Downloading new content to _' + uuid + ' ...');
   exec('wget --adjust-extension --span-hosts --convert-links --no-directories --page-requisites -e robots=off '
     + '--directory-prefix=' + __dirname + '/content/_' + uuid + ' '
-    + randomContentURL,
+    + randomContentURLparsed.href,
     (err, stdout, stderr) => {
     if (err) {
       console.log('Error downloading _' + uuid + ': ' + stderr);
@@ -115,6 +133,7 @@ parser.on('data', (data) => {
     }
   }
 });
+
 
 
 // Helpers ----------------------------------
