@@ -9,12 +9,10 @@ const contentURL = '/content';
 const main = document.querySelector('#main');
 const content = document.querySelector('#content');
 const overlay = document.querySelector('#overlay');
-const drop = document.querySelector('#drop');
 let pumpLevel = 0;
 let reloaded = true;
 let lastPumpLevel = 0, visibility = 0.0;
 let wasRaising = false, isRaising = false, strokeWasStarted = false;
-let waves = [];
 let lastWave = {};
 
 content.src = contentURL;
@@ -67,12 +65,8 @@ connection.onmessage = (message) => {
   // Add waves.
   if (strokeWasStarted) {
     strokeWasStarted = false;
-    waves = main.querySelectorAll('.wave');
-    if (waves.length) {
-      lastWave = waves[waves.length - 1];
-      lastWave.style.transform = 'scale(1)';
-      lastWave.style.opacity = '0.0';
-    }
+    lastWave.style.transform = 'scale(1)';
+    lastWave.style.opacity = '0.0';
   }
   if (isRaising && !wasRaising) {
     strokeWasStarted = true;
@@ -81,6 +75,7 @@ connection.onmessage = (message) => {
     wave.style.transform = 'scale(0)';
     wave.style.opacity = '0.1';
     main.appendChild(wave);
+    lastWave = wave;
   }
 };
 
