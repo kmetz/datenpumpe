@@ -32,21 +32,21 @@ connection.onerror = (error) => {
 connection.onmessage = (message) => {
   // console.log('Received message: ' + message.data)
   pumpLevel = Number.parseInt(message.data);
+
+  wasRaising = isRaising;
+  isRaising = (pumpLevel > lastPumpLevel);
+
   if (!Number.isInteger(pumpLevel) || pumpLevel === lastPumpLevel) {
     return;
   }
-
-  visibility = Math.max(0, Math.min(pumpLevel, pumpLevelMax) - pumpLevelMin) / (pumpLevelMax - pumpLevelMin);
-  wasRaising = isRaising;
-  isRaising = (pumpLevel > lastPumpLevel);
   lastPumpLevel = pumpLevel;
+  visibility = Math.max(0, Math.min(pumpLevel, pumpLevelMax) - pumpLevelMin) / (pumpLevelMax - pumpLevelMin);
 
   // Reload content when below pumpLevelMin.
   if (pumpLevel < pumpLevelMin) {
     if (!reloaded) {
       content.src = '';
       content.src = contentURL;
-      main.querySelectorAll('.wave').forEach(e => e.parentNode.removeChild(e));
       reloaded = true;
     }
   }
@@ -67,15 +67,16 @@ connection.onmessage = (message) => {
     strokeWasStarted = false;
     lastWave.style.transform = 'scale(1)';
     lastWave.style.opacity = '0.0';
+    window.setTimeout((wave) => { wave.parentNode.removeChild(wave) }, 3000, lastWave);
   }
   if (isRaising && !wasRaising) {
-    strokeWasStarted = true;
     let wave = document.createElement('div');
     wave.className = 'wave';
     wave.style.transform = 'scale(0)';
-    wave.style.opacity = '0.1';
+    wave.style.opacity = '0.2';
     main.appendChild(wave);
     lastWave = wave;
+    strokeWasStarted = true;
   }
 };
 
