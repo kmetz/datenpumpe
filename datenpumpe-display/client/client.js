@@ -60,7 +60,7 @@ connection.onmessage = (message) => {
   // Animate content.
   content.style.opacity = EasingFunctions.easeOutQuad(visibility);
   //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
-  content.style.transform = 'scale(' + EasingFunctions.easeOutCubic(visibility) + ')';
+  content.style.transform = 'scale(' + EasingFunctions.easeOutQuint(visibility) + ')';
 
   // Add waves.
   if (strokeWasStarted) {
@@ -73,7 +73,7 @@ connection.onmessage = (message) => {
     let wave = document.createElement('div');
     wave.className = 'wave';
     wave.style.transform = 'scale(0)';
-    wave.style.opacity = '0.2';
+    wave.style.opacity = '0.4';
     main.appendChild(wave);
     lastWave = wave;
     strokeWasStarted = true;
