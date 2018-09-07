@@ -1,5 +1,5 @@
-let randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
-const cachedContentDirs = 100;
+let randomContentURL = 'http://www.mtz.in/datenpumpe-server/';
+const cachedContentDirs = 50;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
 
@@ -34,6 +34,7 @@ const webServer = express();
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
+const webshot = require('node-webshot');
 let isOffline = false;
 
 log('Content dir: '+ __dirname + '/content/');
@@ -47,7 +48,7 @@ webServer.use('/content', express.static(__dirname + '/content'));
 webServer.get('/content', (req, res) => {
   log('GET /content');
   // Pick random content when offline, or newest.
-  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
+  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1'),
     (err, stdout) => {
     if (!err && stdout.trim().length > 0) {
       let location = '/content/' + stdout.trim();
@@ -60,26 +61,26 @@ webServer.get('/content', (req, res) => {
     }
   });
 
-  // Download new content (try to)
-  let uuid = uuidv1();
-  console.log('Downloading new content to _' + uuid + ' ...');
-  exec('wget --adjust-extension --span-hosts --convert-links --no-directories --page-requisites -e robots=off '
-    + '--directory-prefix=' + __dirname + '/content/_' + uuid + ' '
-    + randomContentURLparsed.href,
-    (err, stdout, stderr) => {
+
+  // Add new content (try to)
+  let filename = uuidv1() + '.png';
+  console.log('Downloading new content: ' + filename + ' ...');
+  webshot(randomContentURLparsed.href, __dirname + '/content/' + filename, {
+    screenSize: { width: 1024, height: 1024 },
+    shotSize: { width: 1024, height: 'all' },
+    userAgent: 'Datenpumpe-Display',
+    takeShotOnCallback: true, // screenshots are triggered by javascript, see datenpumpe-server/index.php
+  }, (err) => {
     if (err) {
-      console.log('Error downloading _' + uuid + ': ' + stderr);
+      console.log('Error downloading ' + filename + ': ' + err);
       console.log('Using offline mode for next request.');
       isOffline = true;
       return;
     }
     isOffline = false;
-    // Rename first .html to index.html
-    execSync('cd ' + __dirname + '/content/_' + uuid + '; mv $(ls -1 *.html | head -n 1) index.html');
-    // Mark dir as ready (R_)
-    execSync('cd ' + __dirname + '/content/' + '; mv _' + uuid + ' R_' + uuid);
-    webServer.use('/content/R_' + uuid, express.static(__dirname + '/content/R_' + uuid));
-    console.log('Download succeeded: R_' + uuid);
+
+    webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
+    console.log('Download succeeded: ' + filename);
     // Delete oldest when more than cachedContentDirs exist
     execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
   });
