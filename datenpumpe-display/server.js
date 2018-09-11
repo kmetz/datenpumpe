@@ -1,5 +1,5 @@
 let randomContentURL = 'http://www.mtz.in/datenpumpe-server/';
-const cachedContentDirs = 50;
+const cachedContentDirs = 10;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
 
@@ -68,27 +68,26 @@ webServer.get('/content', (req, res) => {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    //await page.waitForSelector('body.screenshot-ready', {timeout: 120000});
-    //await page.waitForSelector('#logo', {hidden: true, timeout: 180000});
     await page.setViewport({width: 1024, height: 1024});
     const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
     await page.goto(randomContentURLparsed.href);
     await navigationPromise;
     await page.screenshot({path: __dirname + '/content/' + filename});
     await browser.close();
-
-    isOffline = false;
-    webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
-    console.log('Download succeeded: ' + filename);
-    // Delete oldest when more than cachedContentDirs exist
-    execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
-  })().catch((error) => {
-    isOffline = true;
-    console.log('Error downloading ' + filename + ': ' + error);
-    console.log('Using offline mode for next request.');
-  });
+  })()
+    .then(() => {
+      isOffline = false;
+      webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
+      console.log('Download succeeded: ' + filename);
+      // Delete oldest when more than cachedContentDirs exist
+      execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
+    })
+    .catch((error) => {
+      isOffline = true;
+      console.log('Error downloading ' + filename + ': ' + error);
+      console.log('Using offline mode for next request.');
+    });
 });
-
 
 
 webServer.listen(webServerPort, () => {
