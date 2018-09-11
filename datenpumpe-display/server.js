@@ -34,6 +34,9 @@ const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
 const puppeteer = require('puppeteer');
+// Don't use bundled chrome on raspbian / arm
+const puppeteerLaunchOptions = (process.platform === 'linux' && process.arch === 'arm') ? {executablePath: '/usr/bin/chromium-browser'} : {};
+
 let isOffline = false;
 
 log('Content dir: ' + __dirname + '/content/');
@@ -66,7 +69,7 @@ webServer.get('/content', (req, res) => {
   console.log('Downloading new content: ' + filename + ' ...');
 
   (async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
     await page.setViewport({width: 1024, height: 1024});
     const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
