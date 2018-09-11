@@ -72,7 +72,7 @@ webServer.get('/content', (req, res) => {
     //await page.waitForSelector('#logo', {hidden: true, timeout: 180000});
     await page.setViewport({width: 1024, height: 1024});
     const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
-    await page.goto(randomContentURLparsed.href + '?id=10');
+    await page.goto(randomContentURLparsed.href);
     await navigationPromise;
     await page.screenshot({path: __dirname + '/content/' + filename});
     await browser.close();
