@@ -2,7 +2,7 @@
 
 console.log('Hello');
 
-const pumpLevelMin = 20;
+const pumpLevelMin = 10;
 const pumpLevelMax = 300;
 
 const contentURL = '/content';
