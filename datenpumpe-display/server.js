@@ -1,5 +1,5 @@
 let randomContentURL = 'http://www.mtz.in/datenpumpe-server/';
-const cachedContentDirs = 10;
+const cachedContentDirs = 50;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
 
