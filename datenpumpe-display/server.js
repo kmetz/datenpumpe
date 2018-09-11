@@ -1,5 +1,5 @@
-let randomContentURL = 'https://de.m.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite#/random';
-const cachedContentDirs = 100;
+let randomContentURL = 'http://www.mtz.in/datenpumpe-server/';
+const cachedContentDirs = 10;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
 
@@ -9,7 +9,7 @@ const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
 
 
 // Read location query setting from txt file (~/Desktop/location.txt).
-const { URL } = require('url');
+const {URL} = require('url');
 let randomContentURLparsed = new URL(randomContentURL);
 const fs = require('fs');
 const locationTxtPath = require('os').homedir() + '/Desktop/location.txt';
@@ -23,8 +23,7 @@ if (location.length) {
   log('Location: ' + location);
   randomContentURLparsed.search = 'location=' + location;
 }
-log('Content URL: '+ randomContentURLparsed.href);
-
+log('Content URL: ' + randomContentURLparsed.href);
 
 
 // Web server ---------------------------------------------------------------
@@ -34,9 +33,10 @@ const webServer = express();
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
+const puppeteer = require('puppeteer');
 let isOffline = false;
 
-log('Content dir: '+ __dirname + '/content/');
+log('Content dir: ' + __dirname + '/content/');
 
 // Serve client at /
 webServer.use(express.static(__dirname + '/client'));
@@ -47,49 +47,52 @@ webServer.use('/content', express.static(__dirname + '/content'));
 webServer.get('/content', (req, res) => {
   log('GET /content');
   // Pick random content when offline, or newest.
-  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 R_* | sort -R | head -n 1' : 'ls -td1 R_* | head -n 1'),
+  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1'),
     (err, stdout) => {
-    if (!err && stdout.trim().length > 0) {
-      let location = '/content/' + stdout.trim();
-      res.redirect(302, location);
-      log('Redirected to ' + location);
-    }
-    else {
-      log('Error: no content available.');
-      res.status(503).send('No content available, please ensure internet connection and try again shortly.');
-    }
-  });
+      if (!err && stdout.trim().length > 0) {
+        let location = '/content/' + stdout.trim();
+        res.redirect(302, location);
+        log('Redirected to ' + location);
+      }
+      else {
+        log('Error: no content available.');
+        res.status(503).send('No content available, please ensure internet connection and try again shortly.');
+      }
+    });
 
-  // Download new content (try to)
-  let uuid = uuidv1();
-  console.log('Downloading new content to _' + uuid + ' ...');
-  exec('wget --adjust-extension --span-hosts --convert-links --no-directories --page-requisites -e robots=off '
-    + '--directory-prefix=' + __dirname + '/content/_' + uuid + ' '
-    + randomContentURLparsed.href,
-    (err, stdout, stderr) => {
-    if (err) {
-      console.log('Error downloading _' + uuid + ': ' + stderr);
-      console.log('Using offline mode for next request.');
+
+  // Add new content (try to)
+  let filename = uuidv1() + '.png';
+  console.log('Downloading new content: ' + filename + ' ...');
+
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setViewport({width: 1024, height: 1024});
+    const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
+    await page.goto(randomContentURLparsed.href);
+    await navigationPromise;
+    await page.screenshot({path: __dirname + '/content/' + filename});
+    await browser.close();
+  })()
+    .then(() => {
+      isOffline = false;
+      webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
+      console.log('Download succeeded: ' + filename);
+      // Delete oldest when more than cachedContentDirs exist
+      execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
+    })
+    .catch((error) => {
       isOffline = true;
-      return;
-    }
-    isOffline = false;
-    // Rename first .html to index.html
-    execSync('cd ' + __dirname + '/content/_' + uuid + '; mv $(ls -1 *.html | head -n 1) index.html');
-    // Mark dir as ready (R_)
-    execSync('cd ' + __dirname + '/content/' + '; mv _' + uuid + ' R_' + uuid);
-    webServer.use('/content/R_' + uuid, express.static(__dirname + '/content/R_' + uuid));
-    console.log('Download succeeded: R_' + uuid);
-    // Delete oldest when more than cachedContentDirs exist
-    execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
-  });
+      console.log('Error downloading ' + filename + ': ' + error);
+      console.log('Using offline mode for next request.');
+    });
 });
 
 
 webServer.listen(webServerPort, () => {
   log('Web server listening on port ' + webServerPort + '.');
 });
-
 
 
 // Send pump level from serial port to client via WebSocket -----------------
@@ -99,9 +102,10 @@ let pumpLevel = 0;
 
 const webSocketServer = require('websocket').server;
 const http = require('http');
-const wsHttpServer = http.createServer(function(request, response) {
+const wsHttpServer = http.createServer((request, response) => {
 });
-wsHttpServer.listen(webSocketServerPort, () => {});
+wsHttpServer.listen(webSocketServerPort, () => {
+});
 const socketServer = new webSocketServer({
   httpServer: wsHttpServer
 });
@@ -114,8 +118,8 @@ socketServer.on('request', (request) => {
 
 
 const SerialPort = require('serialport');
-const serial = new SerialPort(pumpLevelSerialPort, { baudRate: 9600 });
-serial.on('error', function(err) {
+const serial = new SerialPort(pumpLevelSerialPort, {baudRate: 9600});
+serial.on('error', function (err) {
   log(err.message)
 });
 
@@ -127,13 +131,12 @@ parser.on('data', (data) => {
   split = data.split(':');
   if (split.length === 2) {
     pumpLevel = Number.parseInt(split[1].trim());
-     if (Number.isInteger(pumpLevel)) {
+    if (Number.isInteger(pumpLevel)) {
       connection.sendUTF(pumpLevel.toString());
       log('–> ' + pumpLevel.toString(), 2);
     }
   }
 });
-
 
 
 // Helpers ----------------------------------
