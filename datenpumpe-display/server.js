@@ -68,8 +68,9 @@ webServer.get('/content', (req, res) => {
   let filename = uuidv1() + '.png';
   console.log('Downloading new content: ' + filename + ' ...');
 
+  let browser = {};
   (async () => {
-    const browser = await puppeteer.launch(puppeteerLaunchOptions);
+    browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
     await page.setViewport({width: 1024, height: 1024});
     const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
@@ -89,6 +90,7 @@ webServer.get('/content', (req, res) => {
       isOffline = true;
       console.log('Error downloading ' + filename + ': ' + error);
       console.log('Using offline mode for next request.');
+      browser.close();
     });
 });
 
