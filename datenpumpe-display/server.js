@@ -33,7 +33,7 @@ const webServer = express();
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
-const webshot = require('node-webshot');
+const puppeteer = require('puppeteer');
 let isOffline = false;
 
 log('Content dir: ' + __dirname + '/content/');
@@ -64,25 +64,31 @@ webServer.get('/content', (req, res) => {
   // Add new content (try to)
   let filename = uuidv1() + '.png';
   console.log('Downloading new content: ' + filename + ' ...');
-  webshot(randomContentURLparsed.href, __dirname + '/content/' + filename, {
-    screenSize: {width: 1024, height: 1024},
-    shotSize: {width: 1024, height: 'all'},
-    userAgent: 'Datenpumpe-Display',
-    takeShotOnCallback: true, // screenshots are triggered by javascript, see datenpumpe-server/index.php
-  }, (err) => {
-    if (err) {
-      console.log('Error downloading ' + filename + ': ' + err);
-      console.log('Using offline mode for next request.');
-      isOffline = true;
-      return;
-    }
+
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    //await page.waitForSelector('body.screenshot-ready', {timeout: 120000});
+    //await page.waitForSelector('#logo', {hidden: true, timeout: 180000});
+    await page.setViewport({width: 1024, height: 1024});
+    const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
+    await page.goto(randomContentURLparsed.href + '?id=10');
+    await navigationPromise;
+    await page.screenshot({path: __dirname + '/content/' + filename});
+    await browser.close();
+
     isOffline = false;
     webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
     console.log('Download succeeded: ' + filename);
     // Delete oldest when more than cachedContentDirs exist
     execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
+  })().catch((error) => {
+    isOffline = true;
+    console.log('Error downloading ' + filename + ': ' + error);
+    console.log('Using offline mode for next request.');
   });
 });
+
 
 
 webServer.listen(webServerPort, () => {
