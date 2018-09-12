@@ -1,4 +1,4 @@
-let randomContentURL = 'http://www.mtz.in/datenpumpe-server/';
+let randomContentURL = 'https://www.wikimedia.de/extern/datenpumpe/';
 const cachedContentDirs = 50;
 const webServerPort = 8080;
 const webSocketServerPort = 8081;
@@ -6,6 +6,21 @@ const webSocketServerPort = 8081;
 const argv = require('minimist')(process.argv.slice(2));
 const pumpLevelSerialPort = ('serialPort' in argv) ? argv.serialPort : '/dev/ttyACM0';
 const loglevel = ('quiet' in argv) ? 0 : (('verbose' in argv) ? 2 : 1);
+
+const puppeteer = require('puppeteer');
+// Don't use bundled chrome on raspbian / arm
+const puppeteerLaunchOptions = (process.platform === 'linux' && process.arch === 'arm') ? {executablePath: '/usr/bin/chromium-browser'} : {};
+
+const webSocketServer = require('websocket').server;
+const http = require('http');
+
+const express = require('express');
+const webServer = express();
+const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
+const uuidv1 = require('uuid/v1');
+
+let isOffline = false;
 
 
 // Read location query setting from txt file (~/Desktop/location.txt).
@@ -26,45 +41,10 @@ if (location.length) {
 log('Content URL: ' + randomContentURLparsed.href);
 
 
-// Web server ---------------------------------------------------------------
 
-const express = require('express');
-const webServer = express();
-const execSync = require('child_process').execSync;
-const exec = require('child_process').exec;
-const uuidv1 = require('uuid/v1');
-const puppeteer = require('puppeteer');
-// Don't use bundled chrome on raspbian / arm
-const puppeteerLaunchOptions = (process.platform === 'linux' && process.arch === 'arm') ? {executablePath: '/usr/bin/chromium-browser'} : {};
+// Create content (website screenshots) ------------------
 
-let isOffline = false;
-
-log('Content dir: ' + __dirname + '/content/');
-
-// Serve client at /
-webServer.use(express.static(__dirname + '/client'));
-// Serve content
-webServer.use('/content', express.static(__dirname + '/content'));
-
-// Redirects from /content to actual content.
-webServer.get('/content', (req, res) => {
-  log('GET /content');
-  // Pick random content when offline, or newest.
-  exec('cd ' + __dirname + '/content;' + (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1'),
-    (err, stdout) => {
-      if (!err && stdout.trim().length > 0) {
-        let location = '/content/' + stdout.trim();
-        res.redirect(302, location);
-        log('Redirected to ' + location);
-      }
-      else {
-        log('Error: no content available.');
-        res.status(503).send('No content available, please ensure internet connection and try again shortly.');
-      }
-    });
-
-
-  // Add new content (try to)
+function downloadContent(count) {
   let filename = uuidv1() + '.png';
   console.log('Downloading new content: ' + filename + ' ...');
 
@@ -85,6 +65,11 @@ webServer.get('/content', (req, res) => {
       console.log('Download succeeded: ' + filename);
       // Delete oldest when more than cachedContentDirs exist
       execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
+
+      // Sequentially download multiple
+      if (count) {
+        downloadContent(count - 1);
+      }
     })
     .catch((error) => {
       isOffline = true;
@@ -92,6 +77,43 @@ webServer.get('/content', (req, res) => {
       console.log('Using offline mode for next request.');
       browser.close();
     });
+}
+
+// Enshure we have enough content
+exec('cd ' + __dirname + '/content;' + 'ls -d1 *.png | wc -l', (err, stdout) => {
+  if (!err) {
+    let existing = parseInt(stdout.trim());
+    downloadContent(cachedContentDirs - existing);
+  }
+});
+
+
+// Web server ---------------------------------------------------------------
+
+log('Content dir: ' + __dirname + '/content/');
+
+// Serve client at /
+webServer.use(express.static(__dirname + '/client'));
+// Serve content
+webServer.use('/content', express.static(__dirname + '/content'));
+
+// Redirects from /content to actual content.
+webServer.get('/content', (req, res) => {
+  log('GET /content');
+  // Pick random content when offline, or newest.
+  exec('cd ' + __dirname + '/content;'
+    + (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1'), (err, stdout) => {
+    if (!err && stdout.trim().length > 0) {
+      let location = '/content/' + stdout.trim();
+      res.redirect(302, location);
+      log('Redirected to ' + location);
+    }
+    else {
+      log('Error: no content available.');
+      res.status(503).send('No content available, please ensure internet connection and try again shortly.');
+    }
+  });
+  downloadContent(1);
 });
 
 
@@ -104,9 +126,6 @@ webServer.listen(webServerPort, () => {
 
 let connection = {};
 let pumpLevel = 0;
-
-const webSocketServer = require('websocket').server;
-const http = require('http');
 const wsHttpServer = http.createServer((request, response) => {
 });
 wsHttpServer.listen(webSocketServerPort, () => {
