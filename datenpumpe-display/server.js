@@ -101,8 +101,11 @@ webServer.use('/content', express.static(__dirname + '/content'));
 webServer.get('/content', (req, res) => {
   log('GET /content');
   // Pick random content when offline, or newest.
-  exec('cd ' + __dirname + '/content;'
-    + (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1'), (err, stdout) => {
+  //let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
+  // Always pick random content
+  let lsCommand = 'ls -d1 *.png | sort -R | head -n 1';
+
+  exec('cd ' + __dirname + '/content;' + lsCommand, (err, stdout) => {
     if (!err && stdout.trim().length > 0) {
       let location = '/content/' + stdout.trim();
       res.redirect(302, location);
