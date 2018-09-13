@@ -55,12 +55,15 @@ connection.onmessage = (message) => {
   }
 
   // Animate circle.
-  overlay.style.boxShadow = 'inset 0 0 0 ' + (820 * (1 - visibility)) + 'px black';
+  overlay.style.boxShadow = 'inset 0 0 0 ' + (1035 * (1 - visibility)) + 'px black';
 
   // Animate content.
   content.style.opacity = EasingFunctions.easeOutQuad(visibility);
   //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
-  content.style.transform = 'scale(' + EasingFunctions.easeOutQuint(visibility) + ')';
+  content.style.transform =
+    'translateY(' + (450 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
+    'scale(' + Math.min(1, EasingFunctions.easeOutQuint(visibility) + 0.1) + ')';
+
 
   // Add waves.
   if (strokeWasStarted) {
@@ -73,7 +76,7 @@ connection.onmessage = (message) => {
     let wave = document.createElement('div');
     wave.className = 'wave';
     wave.style.transform = 'scale(0)';
-    wave.style.opacity = '0.4';
+    wave.style.opacity = '0.6';
     main.appendChild(wave);
     lastWave = wave;
     strokeWasStarted = true;
