@@ -74,8 +74,15 @@ function downloadContent(count) {
     .catch((error) => {
       isOffline = true;
       console.log('Error downloading ' + filename + ': ' + error);
-      console.log('Using offline mode for next request.');
+      ////console.log('Using offline mode for next request.');
       browser.close();
+
+      // Try again
+      if (count) {
+        window.setTimeout(() => {
+          downloadContent(count);
+        }, 10000);
+      }
     });
 }
 
@@ -100,8 +107,8 @@ webServer.use('/content', express.static(__dirname + '/content'));
 // Redirects from /content to actual content.
 webServer.get('/content', (req, res) => {
   log('GET /content');
-  // Pick random content when offline, or newest.
-  //let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
+  //// Pick random content when offline, or newest.
+  //// let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
   // Always pick random content
   let lsCommand = 'ls -d1 *.png | sort -R | head -n 1';
 
