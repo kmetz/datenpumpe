@@ -5,25 +5,16 @@ namespace Datenpumpe\Server;
 /**
  * Type can be:
  * - singleValue
- *   A big number or text value (first row/column of results).
- *
  * - table
- *   A table of data.
- *
  * - map
- *   A map with layer support (use ?layer in SELECT).
- *
  * - images
- *   Image grid with text captions, use ?image in SELECT for the image URL.
- *
  * - embed
- *   Shows any output dircetly from query.wikimedia.org, make shure to include
- *   a #defaultView comment (e.g. #defaultView:BubbleChart)
  */
+
 
 $queries = [
 
-  0 => [
+  [
     'type' => 'table',
     'title' => 'Wieviele Päpste hatten wieviele Kinder?',
     'query' => <<<SPARQL
@@ -42,7 +33,7 @@ SPARQL
   ],
 
 
-  1 => [
+  [
     'type' => 'images',
     'title' => 'Welche Nationalflaggen zeigen Sterne?',
     'query' => <<<SPARQL
@@ -63,7 +54,7 @@ SPARQL
   ],
 
 
-  2 => [
+  [
     'type' => 'map',
     'title' => 'Nur 12 internationale Flughäfen sind nach Frauen benannt',
     'query' => <<<SPARQL
@@ -94,7 +85,7 @@ SPARQL
   ],
 
 
-  3 => [
+  [
     'type' => 'map',
     'title' => 'Nach Frauen benannte Hochschulen',
     'query' => <<<SPARQL
@@ -125,7 +116,7 @@ SPARQL
   ],
 
 
-  4 => [
+  [
     'type' => 'embed',
     'title' => 'Meistvererbte Berufe',
     'query' => <<<SPARQL
@@ -149,7 +140,7 @@ SPARQL
   ],
 
 
-  5 => [
+  [
     'type' => 'images',
     'title' => 'Auswahl früher Kunst von Frauen',
     'query' => <<<SPARQL
@@ -175,7 +166,7 @@ SPARQL
   ],
 
 
-  6 => [
+  [
     'type' => 'map',
     'title' => 'Auf "ing" endende Ortschaften in Deutschland',
     'query' => <<<SPARQL
@@ -191,7 +182,7 @@ SPARQL
   ],
 
 
-  7 => [
+  [
     'type' => 'map',
     'title' => 'Auf "stedt" endende Ortschaften in Deutschland',
     'query' => <<<SPARQL
@@ -207,7 +198,7 @@ SPARQL
   ],
 
 
-  8 => [
+  [
     'type' => 'map',
     'title' => 'Mit "a" endende Ortschaften in Deutschland',
     'query' => <<<SPARQL
@@ -223,7 +214,7 @@ SPARQL
   ],
 
 
-  9 => [
+  [
     'type' => 'singleValue',
     'title' => 'Wie alt sind Mitglieder des 19. Bundestags durchschnittlich?',
     'query' => <<<SPARQL
@@ -240,7 +231,7 @@ SPARQL
   ],
 
 
-  10 => [
+  [
     'type' => 'map',
     'title' => 'Sprachverteilung in der Schweiz',
     'query' => <<<SPARQL
@@ -281,7 +272,7 @@ SPARQL
   ],
 
 
-  11 => [
+  [
     'type' => 'embed',
     'title' => 'Anteil von Frauen und Johns im britischen Parlament',
     'query' => <<<SPARQL
@@ -335,7 +326,7 @@ SPARQL
   ],
 
 
-  12 => [
+  [
     'type' => 'table',
     'title' => 'Frauenanteil in fiktiven Universen',
     'query' => <<<SPARQL
@@ -361,7 +352,7 @@ SPARQL
   ],
 
 
-  13 => [
+  [
     'type' => 'table',
     'title' => 'Daten zu bekannten Katzen',
     'query' => <<<SPARQL
@@ -381,7 +372,7 @@ SPARQL
   ],
 
 
-  14 => [
+  [
     'type' => 'table',
     'title' => 'Welche großen Städte liegen am tiefsten?',
     'query' => <<<SPARQL
@@ -399,7 +390,7 @@ SPARQL
   ],
 
 
-  15 => [
+  [
     'type' => 'table',
     'title' => 'Welche großen Städte liegen am höchsten?',
     'query' => <<<SPARQL
@@ -417,7 +408,7 @@ SPARQL
   ],
 
 
-  16 => [
+  [
     'type' => 'map',
     'title' => 'Kohlekraftwerke in Deutschland',
     'query' => <<<SPARQL
@@ -435,7 +426,7 @@ SPARQL
   ],
 
 
-  17 => [
+  [
     'type' => 'map',
     'title' => 'Offshore-Windparks in Europa',
     'query' => <<<SPARQL
@@ -455,7 +446,7 @@ SPARQL
   ],
 
 
-  18 => [
+  [
     'type' => 'embed',
     'title' => 'Tragezeiten von Säugetieren',
     'query' => <<<SPARQL
@@ -506,7 +497,7 @@ GROUP BY ?genus
 SPARQL
   ],
 
-  19 => [
+  [
     'type' => 'embed',
     'title' => 'Kinder von Dschingis Khan',
     'query' => <<<SPARQL
@@ -534,7 +525,7 @@ SPARQL
   ],
 
 
-  20 => [
+  [
     'type' => 'images',
     'title' => 'Benannt nach Nelson Mandela',
     'query' => <<<SPARQL
@@ -553,7 +544,7 @@ SPARQL
   ],
 
 
-  21 => [
+  [
     'type' => 'map',
     'title' => 'Wo wurden Raumfahrerinnen und Raumfahrer geboren?',
     'query' => <<<SPARQL
@@ -568,7 +559,8 @@ ORDER BY DESC(?gender)
 SPARQL
   ],
 
-  22 => [
+
+  [
     'type' => 'map',
     'title' => 'U-Bahnhöfe in Berlin',
     'query' => <<<SPARQL
@@ -583,7 +575,8 @@ WHERE {
 SPARQL
   ],
 
-  23 => [
+
+  [
     'type' => 'embed',
     'title' => 'Anzahl der Bahnlinien',
     'query' => <<<SPARQL
@@ -599,7 +592,7 @@ SPARQL
   ],
 
 
-  24 => [
+  [
     'type' => 'singleValue',
     'title' => 'Anzahl der Tierarten in Wikidata',
     'query' => <<<SPARQL
@@ -611,7 +604,7 @@ SPARQL
   ],
 
 
-  25 => [
+  [
     'type' => 'singleValue',
     'title' => 'Anzahl der Personen in Wikidata',
     'query' => <<<SPARQL
@@ -623,7 +616,7 @@ SPARQL
   ],
 
 
-  26 => [
+  [
     'type' => 'images',
     'title' => 'Benannt nach Nelson Mandela',
     'query' => <<<SPARQL
@@ -642,7 +635,7 @@ SPARQL
   ],
 
 
-  27 => [
+  [
     'type' => 'embed',
     'title' => 'Herkunft von Nobelpreisträgern',
     'query' => <<<SPARQL
