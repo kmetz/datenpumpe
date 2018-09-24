@@ -15,7 +15,7 @@
     "node": ">=8.11.3"
   },
   "author": "Kaspar Metz <k@kjpm.de>",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "express": "^4.16.3",
     "minimist": "^1.2.0",
