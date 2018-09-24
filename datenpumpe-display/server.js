@@ -74,7 +74,6 @@ function downloadContent(count) {
     .catch((error) => {
       isOffline = true;
       console.log('Error downloading ' + filename + ': ' + error);
-      ////console.log('Using offline mode for next request.');
       browser.close();
 
       // Try again
