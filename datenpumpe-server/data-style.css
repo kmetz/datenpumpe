@@ -1,0 +1,145 @@
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Serif+Pro:400,700');
+
+html {
+  background: black;
+}
+body {
+  background: #dce4e8;
+  font-family: 'Source Serif Pro', serif;
+  width: 1024px; /* corresponds with Datenpumpe-Hardware */
+  height: 1024px;
+  font-size: 150%;
+  margin: 0;
+}
+
+#content-wrapper {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+#content-wrapper,
+#content-wrapper > div,
+#map {
+  width: 100%;
+  height: 876px;
+  overflow: hidden;
+}
+
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: 48px;
+  height: 148px;
+  margin:  0;
+  padding: 0 2em;
+  text-align: center;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+h1 span {
+  vertical-align: middle;
+}
+
+table {
+  margin: 0 auto;
+  padding: 0 1em;
+  display: block;
+  max-height: 876px;
+  overflow: hidden;
+}
+th, td {
+  text-align: left;
+  padding: 2px 8px;
+}
+th {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+td {
+  background: white;
+}
+table .number {
+  float: right;
+}
+
+.entity {
+  color: #339966;
+}
+
+
+.single-value {
+  font-size: 6em;
+  padding: 0 1em;
+  text-align: center;
+  word-break: break-all;
+
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.images {
+  width: 100%;
+  margin: 0 1em;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: column wrap;
+  flex-flow: column wrap;
+}
+.image {
+  width: 16.67%;
+  box-sizing: border-box;
+  padding: 8px;
+}
+.image img {
+  max-width: 100%;
+  height: auto;
+}
+.image p {
+  font-size: 0.6em;
+  margin: 6px 0;
+  line-height: 1em;
+}
+
+
+/**
+ * Embed style overrides
+ */
+
+/* hide UI */
+.header-toolbar,
+.toolbar-right,
+.leaflet-control-container,
+.brand {
+  display: none;
+}
+
+#query-result {
+  height: 876px !important;
+}
+
+#layout-options {
+  display: none;
+}
+
+
+/* BubbleChart */
+#query-result svg.bubble {
+  margin-top: -80px;
+}
