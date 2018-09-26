@@ -118,6 +118,24 @@ table .number {
 }
 
 
+#map .leaflet-control-zoom {
+  display: none;
+}
+#map .info {
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  font-size: 1.6em;
+}
+#map .legend .legend-color {
+  display: inline-block;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+}
+
+
 /**
  * Embed style overrides
  */
@@ -125,7 +143,6 @@ table .number {
 /* hide UI */
 .header-toolbar,
 .toolbar-right,
-.leaflet-control-container,
 .brand {
   display: none;
 }

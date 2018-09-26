@@ -564,14 +564,18 @@ SPARQL
     'type' => 'map',
     'title' => 'U-Bahnhöfe in Berlin',
     'query' => <<<SPARQL
-  SELECT ?station ?stationLabel ?coord (?line AS ?layer)
+  SELECT ?coord (?label AS ?layer)
 WHERE {
   ?station wdt:P31/wdt:P279* wd:Q928830;
-             wdt:P131 wd:Q64;
-	     wdt:P81 ?line ;
-		 wdt:P625 ?coord .
-    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],de" }
+          wdt:P131 wd:Q64;
+          wdt:P81 ?line;
+          wdt:P625 ?coord.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,en" . 
+    ?line rdfs:label ?label.
+  }
 }
+ORDER BY ?label
 SPARQL
   ],
 

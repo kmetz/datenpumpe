@@ -19,6 +19,7 @@ function deliver_random_query_result() {
   if (isset($_GET['list'])) {
     print '<h2>Datenpumpen-Inhalte (' . count($queries) . ')</h2>';
     print render_query_list($queries);
+    exit;
   }
   elseif (isset($_GET['id']) && is_numeric($_GET['id'])) {
     if (isset($queries[$_GET['id']])) {
@@ -154,7 +155,7 @@ function render_content_map($queryData, $result) {
   $geodataKey = FALSE;
   $layers = [];
   foreach ($result->results->bindings[0] as $key => $value) {
-    if ($value->datatype === 'http://www.opengis.net/ont/geosparql#wktLiteral') {
+    if (isset($value->datatype) && $value->datatype === 'http://www.opengis.net/ont/geosparql#wktLiteral') {
       $geodataKey = $key;
       break;
     }
@@ -165,8 +166,8 @@ function render_content_map($queryData, $result) {
       $layers[$layer][] = $row->{$geodataKey}->value;
     }
   }
-  $layers = array_values($layers);
-  $layersJson = json_encode($layers);
+  $layerNamesJson = json_encode(array_keys($layers));
+  $layersJson = json_encode(array_values($layers));
 
   $html = '<link rel="stylesheet" href="vendor/leaflet.css"/>';
   $html .= '<script src="vendor/leaflet.js" type="text/javascript"></script>';
@@ -206,6 +207,7 @@ let layerColors = [
 ];
 
 let wktLayers = $layersJson;
+let layerNames = $layerNamesJson;
 
 let markerGroup = new L.FeatureGroup();
 
@@ -231,6 +233,21 @@ for (let layer in wktLayers) {
 }
 markerGroup.addTo(map);
 map.fitBounds(markerGroup.getBounds());
+
+if (layerNames.length > 1) {
+  let legend = L.control({position: 'bottomright'});
+  legend.onAdd = () => {
+    let div = L.DomUtil.create('div', 'info legend');
+    for (let layerId in layerNames) {
+      div.innerHTML +=
+        '<div class="legend-color" style="background:' + layerColors[layerId] + '"></div> ' +
+         layerNames[layerId] + '<br>';
+    }
+    return div;
+  };
+  legend.addTo(map);
+}
+
 </script>
 EOS;
   return $html;
