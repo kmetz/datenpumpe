@@ -9,6 +9,7 @@ const contentURL = '/content';
 const main = document.querySelector('#main');
 const content = document.querySelector('#content');
 const overlay = document.querySelector('#overlay');
+const messageDiv = document.querySelector('#message');
 let pumpLevel = 0;
 let reloaded = true;
 let lastPumpLevel = 0, visibility = 0.0;
@@ -54,6 +55,9 @@ connection.onmessage = (message) => {
     reloaded = false;
   }
 
+  // Animate message
+  messageDiv.style.opacity = (pumpLevel < pumpLevelMin) ? 1 : 0;
+
   // Animate circle.
   overlay.style.boxShadow = 'inset 0 0 0 ' + (1035 * (1 - visibility)) + 'px black';
 
@@ -62,6 +66,7 @@ connection.onmessage = (message) => {
   //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
   content.style.transform =
     'translateY(' + (450 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
+   // 'translateX(' + (-100 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
     'scale(' + Math.min(1, EasingFunctions.easeOutQuint(visibility) + 0.1) + ')';
 
 

@@ -3,55 +3,18 @@
 <head>
   <meta charset="utf-8">
   <title>Datenpumpe</title>
-  <style>
-    body, html {
-      background: #000;
-      color: white;
-      margin: 0;
-      padding: 0;
-    }
-
-    #main {
-      overflow: hidden;
-      width: 1024px;
-      height: 1024px;
-      margin: 0 auto;
-      position: relative;
-      background: url('res/water-blue-circle.gif') center 0 no-repeat; background-size: 1800px 1800px;
-    }
-    #content {
-      border: none;
-      display: block;
-    }
-    #overlay {
-      position: absolute;
-      border-radius: 50%;
-      top: -135px;
-      left: -523px;
-      width: 2070px;
-      height: 2070px;
-      box-sizing: border-box;
-      box-shadow: inset 0 0 0 1035px black;
-    }
-    .wave {
-      position: absolute;
-      border-radius: 50%;
-      top: -133px;
-      left: -541px;
-      width: 2106px;
-      height: 2106px;
-      box-sizing: border-box;
-      /* box-shadow: inset 0 0 1024px 256px black; */
-      background: #007AFF;
-      transition: transform 3s, opacity 3s;
-    }
-  </style>
+  <link rel="stylesheet" href="client.css">
 </head>
 
 <body>
 <div id="main">
   <iframe id="content" src="" width="1024" height="1024"></iframe>
   <div id="overlay"></div>
+  <div id="message">
+    Jetzt pumpen, um Live-Daten aus Wikidata zu sehen<br>
+    <!--> <img id="logo" src="res/1052px-Wikidata-logo-en.svg.png"> <!---->
+    <!-- <img id="logo" src="res/Animated_Wikidata_logo.gif"> <!---->
+  </div>
 </div>
 
 <script src="./client.js"></script>
