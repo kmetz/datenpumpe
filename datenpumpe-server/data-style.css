@@ -118,7 +118,8 @@ table .number {
 }
 
 
-#map .leaflet-control-zoom {
+#map .leaflet-control-zoom,
+#map .leaflet-control-attribution {
   display: none;
 }
 #map .info {
