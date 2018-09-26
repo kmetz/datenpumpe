@@ -548,12 +548,16 @@ SPARQL
     'type' => 'map',
     'title' => 'Wo wurden Raumfahrerinnen und Raumfahrer geboren?',
     'query' => <<<SPARQL
-SELECT ?astronaut ?coord (?gender AS ?layer) WHERE {
+SELECT ?astronaut ?coord (?genderlabel AS ?layer) WHERE {
   ?astronaut ?x1 wd:Q11631;
              wdt:P31 wd:Q5;
              wdt:P21 ?gender;
   wdt:P19 ?birthplace.
   ?birthplace wdt:P625 ?coord.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,en" . 
+    ?gender rdfs:label ?genderlabel.
+  }
 }
 ORDER BY DESC(?gender)
 SPARQL
