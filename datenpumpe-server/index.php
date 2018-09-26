@@ -91,6 +91,7 @@ function render_content($queryData) {
   }
 
   $html .= '</div>'; // #content-wrapper
+  $html .= '<img id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
   $html .= '</body></html>';
 
   return $html;
@@ -310,8 +311,10 @@ function render_embed($queryData) {
   // Add title
   $bodyPrepend = '<h1><span>' . $queryData['title'] . '</span></h1>';
   $html = str_replace('<body>', '<body>' . $bodyPrepend, $html);
-  // Absolute URL
-  $bodyAppend = '<script type="text/javascript">CONFIG.api.sparql.uri = "https://query.wikidata.org/sparql"</script>';
+  // Add Logo
+  $bodyAppend = '<img id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
+    // Absolute URL
+  $bodyAppend .= '<script type="text/javascript">CONFIG.api.sparql.uri = "https://query.wikidata.org/sparql"</script>';
   $html = str_replace('</body>', $bodyAppend . '</body>', $html);
 
   return $html;

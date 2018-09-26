@@ -11,6 +11,7 @@ body {
   height: 1024px;
   font-size: 150%;
   margin: 0;
+  position: relative;
 }
 
 #content-wrapper {
@@ -29,6 +30,15 @@ body {
   overflow: hidden;
 }
 
+#logo {
+  display: block;
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  width: auto;
+  height: 64px;
+  z-index: 2000;
+}
 
 h1, h2, h3, h4, h5 {
   font-family: 'Montserrat', sans-serif;
