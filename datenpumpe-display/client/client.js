@@ -59,14 +59,14 @@ connection.onmessage = (message) => {
   messageDiv.style.opacity = (pumpLevel < pumpLevelMin) ? 1 : 0;
 
   // Animate circle.
-  overlay.style.boxShadow = 'inset 0 0 0 ' + (1035 * (1 - visibility)) + 'px black';
+  overlay.style.boxShadow = 'inset 0 0 0 ' + (1073 * (1 - visibility)) + 'px black';
 
   // Animate content.
   content.style.opacity = EasingFunctions.easeOutQuad(visibility);
   //content.style.transform = 'scale(' + ((visibility/2) + 0.5) + ')';
   content.style.transform =
     'translateY(' + (450 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
-   // 'translateX(' + (-100 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
+    // 'translateX(' + (53 * (1 - EasingFunctions.easeOutCubic(visibility))) + 'px) ' +
     'scale(' + Math.min(1, EasingFunctions.easeOutQuint(visibility) + 0.1) + ')';
 
 

@@ -15,10 +15,12 @@ body, html {
   padding: 0;
 }
 #message {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 1em 0.5em;
   color: white;
   font-weight: bold;
-  font-size: 8em;
-  position: absolute;
+  font-size: 6em;
   top: 0;
   left: 0;
   height: 100%;
@@ -28,7 +30,7 @@ body, html {
 }
 #logo {
   display: inline-block;
-  height: 360px;
+  height: 300px;
   width: auto;
 }
 #main {
@@ -37,29 +39,37 @@ body, html {
   height: 1024px;
   margin: 0 auto;
   position: relative;
-  background: url('res/water-blue-circle.gif')  center  0 no-repeat; background-size: 1800px 1800px;
+  background: url('res/water-blue-circle.gif') -315px 0 no-repeat; background-size: 1800px 1800px;
 }
 #content {
   border: none;
   display: block;
 }
+
+/**
+  Drop origin:
+  X: 585
+  Y: 900
+
+  Radius: 1073
+**/
 #overlay {
   position: absolute;
   border-radius: 50%;
-  top: -135px;
-  left: -523px;
-  width: 2070px;
-  height: 2070px;
+  top: -173px;
+  left: -488px;
+  width: 2146px;
+  height: 2146px;
   box-sizing: border-box;
-  box-shadow: inset 0 0 0 1035px black;
+  box-shadow: inset 0 0 0 1073px black;
 }
 .wave {
   position: absolute;
   border-radius: 50%;
-  top: -135px;
-  left: -523px;
-  width: 2070px;
-  height: 2070px;
+  top: -173px;
+  left: -488px;
+  width: 2146px;
+  height: 2146px;
   box-sizing: border-box;
   /* box-shadow: inset 0 0 1024px 256px black; */
   background: #007AFF;
