@@ -30,7 +30,8 @@ body, html {
 }
 #logo {
   display: inline-block;
-  height: 300px;
+  height: 250px;
+  padding: 25px 0;
   width: auto;
 }
 #main {
