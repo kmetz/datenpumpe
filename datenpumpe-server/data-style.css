@@ -1,14 +1,18 @@
 
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Serif+Pro:400,700');
 
+
+body, html {
+  width: 1024px; /* corresponds with Datenpumpe-Hardware */
+  height: 1024px;
+}
+
 html {
   background: black;
 }
 body {
   background: #dce4e8;
   font-family: 'Source Serif Pro', serif;
-  width: 1024px; /* corresponds with Datenpumpe-Hardware */
-  height: 1024px;
   font-size: 150%;
   margin: 0;
   position: relative;
