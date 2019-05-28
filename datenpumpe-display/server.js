@@ -55,7 +55,7 @@ function downloadContent(count) {
     browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
     await page.setViewport({width: 1024, height: 1024});
-    const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'});
+    const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'}).catch((error) => log(error));
     await page.goto(randomContentURLparsed.href);
     await navigationPromise;
     await page.screenshot({path: __dirname + '/content/' + filename});
