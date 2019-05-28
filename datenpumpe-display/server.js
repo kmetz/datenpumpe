@@ -22,6 +22,7 @@ const uuidv1 = require('uuid/v1');
 
 let isOffline = false;
 
+log('----- Starting server -----');
 
 // Read location query setting from txt file (~/Desktop/location.txt).
 const {URL} = require('url');
@@ -46,7 +47,7 @@ log('Content URL: ' + randomContentURLparsed.href);
 
 function downloadContent(count) {
   let filename = uuidv1() + '.png';
-  console.log('Downloading new content: ' + filename + ' ...');
+  log('Downloading new content: ' + filename + ' ...');
 
   let browser = {};
   (async () => {
@@ -62,7 +63,7 @@ function downloadContent(count) {
     .then(() => {
       isOffline = false;
       webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
-      console.log('Download succeeded: ' + filename);
+      log('Download succeeded: ' + filename);
       // Delete oldest when more than cachedContentDirs exist
       execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
 
@@ -73,7 +74,7 @@ function downloadContent(count) {
     })
     .catch((error) => {
       isOffline = true;
-      console.log('Error downloading ' + filename + ': ' + error);
+      log('Error downloading ' + filename + ': ' + error);
       browser.close();
 
       // Try again
@@ -176,5 +177,6 @@ parser.on('data', (data) => {
 
 function log(message, level = 1) {
   if (!loglevel || level > loglevel) return;
+  message = new Date().toISOString().replace('T', ' ') + ' | ' + message
   loglevel <= 1 ? console.log(message) : console.info(message);
 }
