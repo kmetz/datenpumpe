@@ -22,6 +22,7 @@ const uuidv1 = require('uuid/v1');
 
 let isOffline = false;
 
+
 log('----- Starting server -----');
 
 // Read location query setting from txt file (~/Desktop/location.txt).
@@ -68,7 +69,7 @@ function downloadContent(count) {
       execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
 
       // Sequentially download multiple
-      if (count) {
+      if (count > 1) {
         downloadContent(count - 1);
       }
     })
@@ -76,13 +77,6 @@ function downloadContent(count) {
       isOffline = true;
       log('Error downloading ' + filename + ': ' + error);
       browser.close();
-
-      // Try again
-      if (count) {
-        window.setTimeout(() => {
-          downloadContent(count);
-        }, 10000);
-      }
     });
 }
 
@@ -106,24 +100,24 @@ webServer.use('/content', express.static(__dirname + '/content'));
 
 // Redirects from /content to actual content.
 webServer.get('/content', (req, res) => {
-  log('GET /content');
-  //// Pick random content when offline, or newest.
-  //// let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
+  // Pick random content when offline, or newest.
+  let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
   // Always pick random content
-  let lsCommand = 'ls -d1 *.png | sort -R | head -n 1';
+  // let lsCommand = 'ls -d1 *.png | sort -R | head -n 1';
 
   exec('cd ' + __dirname + '/content;' + lsCommand, (err, stdout) => {
     if (!err && stdout.trim().length > 0) {
-      let location = '/content/' + stdout.trim();
+      let filename = stdout.trim();
+      let location = '/content/' + filename;
       res.redirect(302, location);
-      log('Redirected to ' + location);
+      log('Delivered (' + (isOffline ? 'offline' : 'online') + '): ' + filename);
     }
     else {
       log('Error: no content available.');
       res.status(503).send('No content available, please ensure internet connection and try again shortly.');
     }
+    downloadContent(1);
   });
-  downloadContent(1);
 });
 
 
