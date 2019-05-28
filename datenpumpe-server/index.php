@@ -199,7 +199,7 @@ let layerColors = [
   '#97b314',
   '#f29400',
   '#622181',
-  
+
   '#e04700',
   '#79e200',
   '#b31496',
@@ -227,7 +227,7 @@ for (let layer in wktLayers) {
       });
     }
     else {
-      feature = wicket.toObject({});  
+      feature = wicket.toObject({});
     }
     markerGroup.addLayer(feature);
   }
@@ -314,7 +314,6 @@ function render_embed($queryData) {
   // Add Logo
   $bodyAppend = '<img id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
     // Absolute URL
-  $bodyAppend .= '<script type="text/javascript">CONFIG.api.sparql.uri = "https://query.wikidata.org/sparql"</script>';
   $html = str_replace('</body>', $bodyAppend . '</body>', $html);
 
   return $html;
