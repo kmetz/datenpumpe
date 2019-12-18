@@ -71,7 +71,18 @@ function render_query_list($queries) {
 
 function render_content($queryData) {
   $endpointUrl = 'https://query.wikidata.org/sparql';
-  $resultJson = file_get_contents($endpointUrl . '?format=json&query=' . urlencode($queryData['query']));
+  $queryUrl = $endpointUrl . '?format=json&query=' . urlencode($queryData['query']);
+  $opts = [
+    'http' => [
+      'method' => 'GET',
+      'header' => [
+        "Accept: application/sparql-results+json\n" .
+        "User-Agent: Datenpumpe"
+      ],
+    ],
+  ];
+  $context = stream_context_create($opts);
+  $resultJson = file_get_contents($queryUrl, FALSE, $context);
   $result = json_decode($resultJson);
 
   #print '<pre>' . $resultJson . '</pre>';
