@@ -21,6 +21,7 @@ const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
 
 let isOffline = false;
+let lastFilename = '';
 
 
 log('----- Starting server -----');
