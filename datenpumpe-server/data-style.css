@@ -132,8 +132,7 @@ table .number {
 }
 
 
-#map .leaflet-control-zoom,
-#map .leaflet-control-attribution {
+#map .leaflet-control-zoom {
   display: none;
 }
 #map .info {

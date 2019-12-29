@@ -260,6 +260,9 @@ if (layerNames.length > 1) {
   legend.addTo(map);
 }
 
+map.attributionControl.setPrefix('');
+map.attributionControl.addAttribution('Wikimedia maps | Map data © OpenStreetMap contributors');
+
 </script>
 EOS;
   return $html;
