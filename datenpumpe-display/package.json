@@ -18,7 +18,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "express": "^4.17.1",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "puppeteer": "^1.17.0",
     "serialport": "^6.2.2",
     "uuid": "^3.3.2",
