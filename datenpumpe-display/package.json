@@ -12,16 +12,16 @@
     "url": "."
   },
   "engines": {
-    "node": ">=8.11.3"
+    "node": ">=8.11.3 <=10.16.2"
   },
   "author": "Kaspar Metz <k@kjpm.de>",
   "license": "GPL-3.0",
   "dependencies": {
     "express": "^4.17.1",
-    "minimist": "^1.2.0",
-    "puppeteer": "^1.17.0",
-    "serialport": "^6.2.2",
-    "uuid": "^3.3.2",
-    "websocket": "^1.0.28"
+    "minimist": "^1.2.5",
+    "puppeteer": "^5.2.1",
+    "serialport": "^9.0.1",
+    "uuid": "^8.3.0",
+    "websocket": "^1.0.32"
   }
 }
