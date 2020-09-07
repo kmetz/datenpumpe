@@ -9,6 +9,7 @@ namespace Datenpumpe\Server;
 
 deliver_random_query_result();
 
+
 /**
  * Main function, prints HTML.
  */
@@ -77,7 +78,7 @@ function render_content($queryData) {
       'method' => 'GET',
       'header' => [
         "Accept: application/sparql-results+json\n" .
-        "User-Agent: Datenpumpe"
+        "User-Agent: Datenpumpe (server)"
       ],
     ],
   ];
@@ -163,7 +164,6 @@ function render_content_images($queryData, $result) {
 
 
 function render_content_map($queryData, $result) {
-
   $geodataKey = FALSE;
   $layers = [];
   foreach ($result->results->bindings[0] as $key => $value) {
@@ -314,20 +314,36 @@ function render_embed($queryData) {
   $queryURL = $wikidataURL . '/embed.html';
 
   // Fetch embed html
-  $html = file_get_contents($queryURL);
+  $opts = [
+    'http' => [
+      'method' => 'GET',
+      'header' => [
+        "Accept: text/html\n" .
+        "User-Agent: Datenpumpe (server)"
+      ],
+    ],
+  ];
+  $context = stream_context_create($opts);
+  $html = file_get_contents($queryURL, FALSE, $context);
+
   // replace ressource URLs (make them absolute)
   $html = preg_replace('/(href|src)="\/?((?!http).*?)"/', '${1}=' . $wikidataURL . '/${2}', $html);
+
   // Put SPARQL query into URL hash for javascript to render correctly
   $headAppend = '<script type="text/javascript">window.location.hash = "#' . rawurlencode(trim($queryData['query'])) . '";</script>';
+
   // Add our stylesheet
   $headAppend .= '<link rel="stylesheet" href="data-style.css">';
   $html = str_replace('</head>', $headAppend . '</head>', $html);
+
   // Add title
   $bodyPrepend = '<h1><span>' . $queryData['title'] . '</span></h1>';
   $html = str_replace('<body>', '<body>' . $bodyPrepend, $html);
+
   // Add Logo
   $bodyAppend = '<img id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
-    // Absolute URL
+
+  // Absolute URL
   $html = str_replace('</body>', $bodyAppend . '</body>', $html);
 
   return $html;
