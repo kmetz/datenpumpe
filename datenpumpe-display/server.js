@@ -21,7 +21,6 @@ const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
 
 let isOffline = false;
-let lastFilename = '';
 
 
 log('----- Starting server -----');
@@ -44,7 +43,6 @@ if (location.length) {
 log('Content URL: ' + randomContentURLparsed.href);
 
 
-
 // Create content (website screenshots) ------------------
 
 function downloadContent(count) {
@@ -52,15 +50,36 @@ function downloadContent(count) {
   log('Downloading new content: ' + filename + ' ...');
 
   let browser = {};
+  let remoteJsError = false;
+
   (async () => {
     browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
+
+    // Detect errors coming from embedded js from query.wikidata.org.
+    page.on('console', (msg) => {
+      if (msg._type === 'error' && msg._location.url.startsWith('https://query.wikidata.org/sparql?')) {
+        remoteJsError = true;
+      }
+    });
+
+    const loadPageContent = page.waitForNavigation({
+      timeout: 60000,
+      waitUntil: 'networkidle0'
+    });
+
     await page.setViewport({width: 1024, height: 1024});
-    const navigationPromise = page.waitForNavigation({timeout: 60000, waitUntil: 'networkidle0'}).catch((error) => log(error));
-    await page.goto(randomContentURLparsed.href);
-    await navigationPromise;
+    await page.setUserAgent('Datenpumpe (display)');
+
+    const response = await page.goto(randomContentURLparsed.href);
+    await loadPageContent;
+    if (response.status() !== 200) {
+      throw 'http error: ' + response.status();
+    }
+    if (remoteJsError) {
+      throw 'remote js error';
+    }
     await page.screenshot({path: __dirname + '/content/' + filename});
-    await browser.close();
   })()
     .then(() => {
       isOffline = false;
@@ -75,8 +94,10 @@ function downloadContent(count) {
       }
     })
     .catch((error) => {
-      isOffline = true;
+      isOffline = !remoteJsError;
       log('Error downloading ' + filename + ': ' + error);
+    })
+    .finally(() => {
       browser.close();
     });
 }

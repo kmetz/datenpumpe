@@ -49,6 +49,11 @@ function deliver_random_query_result() {
       break;
   }
 
+  if (!$html) {
+    http_response_code(503);
+    exit;
+  }
+
   if (isset($_GET['show_query'])) {
     $html = '<pre>' . $queryData['query'] . '</pre>' . $html;
   }
@@ -270,7 +275,7 @@ EOS;
 
 
 function format_value($value) {
-  if ($value->type === 'literal') {
+  if ($value->type === 'literal' && isset($value->datatype)) {
     switch ($value->datatype) {
       case 'http://www.w3.org/2001/XMLSchema#integer':
         return '<span class="number">'
@@ -325,6 +330,9 @@ function render_embed($queryData) {
   ];
   $context = stream_context_create($opts);
   $html = file_get_contents($queryURL, FALSE, $context);
+  if (!$html) {
+    return FALSE;
+  }
 
   // replace ressource URLs (make them absolute)
   $html = preg_replace('/(href|src)="\/?((?!http).*?)"/', '${1}=' . $wikidataURL . '/${2}', $html);
