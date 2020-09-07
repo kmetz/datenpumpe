@@ -290,9 +290,9 @@ function format_value($value) {
   }
   if ($value->type === 'uri') {
     if (strpos($value->value, 'http://www.wikidata.org/entity/') === 0) {
-      return '<span class="entity">' . end(explode('/', $value->value)) . '</span>';
+      $parts = explode('/', $value->value);
+      return '<span class="entity">' . end($parts) . '</span>';
     }
-
   }
 
   return $value->value;
