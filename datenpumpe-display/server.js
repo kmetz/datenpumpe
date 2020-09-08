@@ -60,17 +60,17 @@ function downloadContent(count) {
   log('Downloading new content: ' + filename + ' ...');
 
   let browser = {};
-  let remoteJsError = false;
   let queryId = false;
 
   (async () => {
     browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
+    let error = false;
 
     // Detect errors coming from embedded js from query.wikidata.org.
     page.on('console', (msg) => {
       if (msg._type === 'error' && msg._location.url.startsWith('https://query.wikidata.org/sparql?')) {
-        remoteJsError = true;
+        error = 'remote js error';
       }
     });
 
@@ -88,12 +88,18 @@ function downloadContent(count) {
       queryId = response.headers()['x-datenpumpe-query-id'];
     }
     if (response.status() !== 200) {
-      throw 'HTTP error: ' + response.status();
+      error = 'HTTP error: ' + response.status();
     }
-    if (remoteJsError) {
-      throw 'remote js error';
+
+    if (!error) {
+      await page.screenshot({path: __dirname + '/content/' + filename});
     }
-    await page.screenshot({path: __dirname + '/content/' + filename});
+    await browser.close();
+
+    // Throw errors only after browser.close().
+    if (error) {
+      throw error;
+    }
   })()
   .then(() => {
     lastDownloadFailed = false;
@@ -114,9 +120,6 @@ function downloadContent(count) {
     lastQueryId = queryId;
     log('Error downloading (query ID ' + queryId + '): ' + filename + ': ' + error);
   })
-  .finally(() => {
-    browser.close();
-  });
 }
 
 // Enshure we have enough content
