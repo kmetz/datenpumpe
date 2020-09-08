@@ -24,7 +24,7 @@ function deliver_random_query_result() {
   }
   elseif (isset($_GET['id']) && is_numeric($_GET['id'])) {
     if (isset($queries[$_GET['id']])) {
-      $queryData = $queries[$_GET['id']];
+      $queryId = $_GET['id'];
     }
     else {
       header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
@@ -32,8 +32,22 @@ function deliver_random_query_result() {
     }
   }
   else {
-    $queryData = $queries[array_rand($queries)];
+    $lastQueryId = FALSE;
+    if (isset($_GET['last'])
+      && is_numeric($_GET['last'])
+      && intval($_GET['last']) < count($queries)
+    ) {
+      $lastQueryId = intval($_GET['last']);
+    }
+
+    $queryId = array_rand($queries);
+    while ($queryId === $lastQueryId) {
+      $queryId = array_rand($queries);
+    }
   }
+
+  header('x-datenpumpe-query-id: ' . $queryId);
+  $queryData = $queries[$queryId];
 
   $html = '';
   switch ($queryData['type']) {

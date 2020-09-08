@@ -20,17 +20,25 @@ const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
 const uuidv1 = require('uuid/v1');
 
-let isOffline = false;
+let lastDownloadFailed = false;
+let lastQueryId = false;
 
 
 log('----- Starting server -----');
 
-// Read location query setting from txt file (~/Desktop/location.txt).
+// Assemble content URL.
 const {URL} = require('url');
 let randomContentURLparsed = new URL(randomContentURL);
+let searchParams = new URLSearchParams();
+if (lastQueryId) {
+  searchParams.append('last', lastQueryId);
+}
+
+// Read location query setting from txt file (~/Desktop/location.txt).
+// Note: currently unused.
+let location = '';
 const fs = require('fs');
 const locationTxtPath = require('os').homedir() + '/Desktop/location.txt';
-let location = '';
 try {
   location = fs.readFileSync(locationTxtPath).toString().replace(/[^a-z0-9_-]/gmi, '');
 } catch (e) {
@@ -38,8 +46,10 @@ try {
 }
 if (location.length) {
   log('Location: ' + location);
-  randomContentURLparsed.search = 'location=' + location;
+  searchParams.append('location', location);
 }
+
+randomContentURLparsed.search = searchParams.toString();
 log('Content URL: ' + randomContentURLparsed.href);
 
 
@@ -73,33 +83,37 @@ function downloadContent(count) {
 
     const response = await page.goto(randomContentURLparsed.href);
     await loadPageContent;
+    if (response.headers().hasOwnProperty('x-datenpumpe-query-id')) {
+      lastQueryId = response.headers()['x-datenpumpe-query-id'];
+      log('Got query ID: ' + lastQueryId);
+    }
     if (response.status() !== 200) {
-      throw 'http error: ' + response.status();
+      throw 'HTTP error: ' + response.status();
     }
     if (remoteJsError) {
       throw 'remote js error';
     }
     await page.screenshot({path: __dirname + '/content/' + filename});
   })()
-    .then(() => {
-      isOffline = false;
-      webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
-      log('Download succeeded: ' + filename);
-      // Delete oldest when more than cachedContentDirs exist
-      execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
+  .then(() => {
+    lastDownloadFailed = false;
+    webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
+    log('Download succeeded: ' + filename);
+    // Delete oldest when more than cachedContentDirs exist
+    execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
 
-      // Sequentially download multiple
-      if (count > 1) {
-        downloadContent(count - 1);
-      }
-    })
-    .catch((error) => {
-      isOffline = !remoteJsError;
-      log('Error downloading ' + filename + ': ' + error);
-    })
-    .finally(() => {
-      browser.close();
-    });
+    // Sequentially download multiple
+    if (count > 1) {
+      downloadContent(count - 1);
+    }
+  })
+  .catch((error) => {
+    lastDownloadFailed = true;
+    log('Error downloading ' + filename + ': ' + error);
+  })
+  .finally(() => {
+    browser.close();
+  });
 }
 
 // Enshure we have enough content
@@ -123,21 +137,24 @@ webServer.use('/content', express.static(__dirname + '/content'));
 // Redirects from /content to actual content.
 webServer.get('/content', (req, res) => {
   // Pick random content when offline, or newest.
-  let lsCommand = (isOffline ? 'ls -d1 *.png | sort -R | head -n 1' : 'ls -td1 *.png | head -n 1');
-  // Always pick random content
-  // let lsCommand = 'ls -d1 *.png | sort -R | head -n 1';
+  let lsCommand = (lastDownloadFailed
+    ? 'ls -d1 *.png | sort -R | head -n 1'
+    : 'ls -td1 *.png | head -n 1'
+  );
 
   exec('cd ' + __dirname + '/content;' + lsCommand, (err, stdout) => {
     if (!err && stdout.trim().length > 0) {
       let filename = stdout.trim();
       let location = '/content/' + filename;
       res.redirect(302, location);
-      log('Delivered (' + (isOffline ? 'offline' : 'online') + '): ' + filename);
+      log('Delivered (' + (lastDownloadFailed ? 'from cache' : 'fresh') + '): ' + filename);
     }
     else {
       log('Error: no content available.');
       res.status(503).send('No content available, please ensure internet connection and try again shortly.');
     }
+
+    // Try downloading fresh content.
     downloadContent(1);
   });
 });
