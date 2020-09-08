@@ -61,6 +61,7 @@ function downloadContent(count) {
 
   let browser = {};
   let remoteJsError = false;
+  let queryId = false;
 
   (async () => {
     browser = await puppeteer.launch(puppeteerLaunchOptions);
@@ -84,8 +85,7 @@ function downloadContent(count) {
     const response = await page.goto(randomContentURLparsed.href);
     await loadPageContent;
     if (response.headers().hasOwnProperty('x-datenpumpe-query-id')) {
-      lastQueryId = response.headers()['x-datenpumpe-query-id'];
-      log('Got query ID: ' + lastQueryId);
+      queryId = response.headers()['x-datenpumpe-query-id'];
     }
     if (response.status() !== 200) {
       throw 'HTTP error: ' + response.status();
@@ -97,8 +97,10 @@ function downloadContent(count) {
   })()
   .then(() => {
     lastDownloadFailed = false;
+    lastQueryId = queryId;
     webServer.use('/content/' + filename, express.static(__dirname + '/content/' + filename));
-    log('Download succeeded: ' + filename);
+    log('Download succeeded (query ID ' + queryId + '): ' + filename);
+
     // Delete oldest when more than cachedContentDirs exist
     execSync('cd ' + __dirname + '/content/' + '; ls -t | sed -e "1,' + cachedContentDirs + 'd" | xargs rm -rf');
 
@@ -109,7 +111,8 @@ function downloadContent(count) {
   })
   .catch((error) => {
     lastDownloadFailed = true;
-    log('Error downloading ' + filename + ': ' + error);
+    lastQueryId = queryId;
+    log('Error downloading (query ID ' + queryId + '): ' + filename + ': ' + error);
   })
   .finally(() => {
     browser.close();
