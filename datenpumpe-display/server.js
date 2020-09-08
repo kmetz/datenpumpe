@@ -22,7 +22,7 @@ const uuidv1 = require('uuid/v1');
 
 let lastDownloadFailed = false;
 let lastQueryId = false;
-
+let lastFilename = false;
 
 log('----- Starting server -----');
 
@@ -141,7 +141,7 @@ webServer.use('/content', express.static(__dirname + '/content'));
 webServer.get('/content', (req, res) => {
   // Pick random content when offline, or newest.
   let lsCommand = (lastDownloadFailed
-    ? 'ls -d1 *.png | sort -R | head -n 1'
+    ? 'ls -d1 *.png | grep -vxF "' + lastFilename + '" | sort -R | head -n 1'
     : 'ls -td1 *.png | head -n 1'
   );
 
@@ -151,6 +151,7 @@ webServer.get('/content', (req, res) => {
       let location = '/content/' + filename;
       res.redirect(302, location);
       log('Delivered (' + (lastDownloadFailed ? 'from cache' : 'fresh') + '): ' + filename);
+      lastFilename = filename;
     }
     else {
       log('Error: no content available.');
