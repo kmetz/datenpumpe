@@ -18,7 +18,7 @@ const express = require('express');
 const webServer = express();
 const execSync = require('child_process').execSync;
 const exec = require('child_process').exec;
-const uuidv1 = require('uuid/v1');
+const uuid = require('uuid');
 
 let lastDownloadFailed = false;
 let lastQueryId = false;
@@ -56,7 +56,7 @@ log('Content URL: ' + randomContentURLparsed.href);
 // Create content (website screenshots) ------------------
 
 function downloadContent(count) {
-  let filename = uuidv1() + '.png';
+  let filename = uuid.v1() + '.png';
   log('Downloading new content: ' + filename + ' ...');
 
   let browser = {};
