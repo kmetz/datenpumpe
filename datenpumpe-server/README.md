@@ -43,4 +43,9 @@ A big number or text value (first row/column of results).
 
 
 ### SPARQL
-Please test on query.wikidata.org.
+Please test on [query.wikidata.org](https://query.wikidata.org).
+
+
+## Config
+The file `default-config.json` is a local copy of https://query.wikidata.org/default-config.json
+(must be reachable locally). From time to time it must be updated (when new mandatory items are added).
