@@ -151,9 +151,11 @@ table .number {
 }
 #map .legend .legend-color {
   display: inline-block;
+  width: 7px;
+  height: 8px;
+  border-style: solid;
+  border-width: 3px;
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
 }
 
 
@@ -176,8 +178,26 @@ table .number {
   display: none;
 }
 
+#query-result svg {
+  max-height: 876px !important;
+}
 
-/* BubbleChart */
+  /* BubbleChart */
 #query-result svg.bubble {
   margin-top: -80px;
 }
+
+/* Buttons (eg in Timeline) */
+#query-result .btn {
+  display: none;
+}
+
+.vis-timeline .vis-item {
+  padding: 0;
+}
+.vis-timeline .vis-item img {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+

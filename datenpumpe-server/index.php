@@ -236,12 +236,21 @@ let layerColors = [
   '#97b314',
   '#f29400',
   '#622181',
-
   '#e04700',
   '#79e200',
   '#b31496',
   '#3400f2',
   '#817121',
+  '#70bfe0',
+  '#e371b0',
+  '#abb38b',
+  '#f2c479',
+  '#724e82',
+  '#e09470',
+  '#aee371',
+  '#b386a9',
+  '#9379f2',
+  '#827c68',
 ];
 
 let wktLayers = $layersJson;
@@ -260,6 +269,7 @@ for (let layer in wktLayers) {
     if (geojson.type === 'Point') {
       feature = L.circleMarker([geojson.coordinates[1], geojson.coordinates[0]], {
         color: color,
+        fill: false,
         radius: 5
       });
     }
@@ -278,7 +288,7 @@ if (layerNames.length > 1) {
     let div = L.DomUtil.create('div', 'info legend');
     for (let layerId in layerNames) {
       div.innerHTML +=
-        '<div class="legend-color" style="background:' + layerColors[layerId] + '"></div> ' +
+        '<div class="legend-color" style="border-color:' + layerColors[layerId] + '"></div> ' +
          layerNames[layerId] + '<br>';
     }
     return div;
