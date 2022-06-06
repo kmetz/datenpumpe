@@ -132,8 +132,8 @@ function render_content($queryData) {
 function render_content_singleValue($queryData, $result) {
   $row = $col = 0;
   $key = $result->head->vars[$col];
-  $value = $result->results->bindings[$row]->{$key};
-  $html = '<div class="single-value">' . format_value($value) . '</div>';
+  $value = $result->results->bindings[$row]->{$key} ?? NULL;
+  $html = '<div class="single-value">' . ($value ? format_value($value) : '') . '</div>';
 
   return $html;
 }
@@ -150,7 +150,8 @@ function render_content_table($queryData, $result) {
   foreach ($result->results->bindings as $row) {
     $html .= '<tr>';
     foreach ($result->head->vars as $key) {
-      $html .= '<td>' . format_value($row->{$key}) . '</td>';
+      $value = $row->{$key} ?? NULL;
+      $html .= '<td>' . ($value ? format_value($value) : '') . '</td>';
     }
     $html .= '</tr>';
   }
@@ -172,7 +173,8 @@ function render_content_images($queryData, $result) {
       if ($key === 'image') {
         continue;
       }
-      $html .= '<p>' . format_value($row->{$key}) . '</p>';
+      $value = $row->{$key} ?? NULL;
+      $html .= '<p>' . ($value ? format_value($value) : '') . '</p>';
     }
     $html .= '</div>'; // .image
   }
@@ -193,7 +195,7 @@ function render_content_map($queryData, $result) {
   }
   if ($geodataKey) {
     foreach ($result->results->bindings as $row) {
-      $layer = !empty($row->layer->value) ? $row->layer->value : '0';
+      $layer = $row->layer->value ?? '0';
       $layers[$layer][] = $row->{$geodataKey}->value;
     }
   }
@@ -219,9 +221,14 @@ map.boxZoom.disable();
 map.keyboard.disable();
 if (map.tap) map.tap.disable();
 
-let tileLayer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+// OSM mapnik:
+let tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     id: 'base',
 }).addTo(map);
+// Wikimedia Maps:
+// let tileLayer = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+//   id: 'base',
+// }).addTo(map);
 
 let layerColors = [
   '#009ee0',
@@ -280,7 +287,10 @@ if (layerNames.length > 1) {
 }
 
 map.attributionControl.setPrefix('');
-map.attributionControl.addAttribution('Wikimedia maps | Map data © OpenStreetMap contributors');
+// OSM mapnik:
+map.attributionControl.addAttribution('Map data © OpenStreetMap contributors');
+// Wikimedia Maps: 
+// map.attributionControl.addAttribution('Wikimedia maps | Map data © OpenStreetMap contributors');
 
 </script>
 EOS;
@@ -326,11 +336,21 @@ function format_value($value) {
  * @return string Resulting HTML.
  */
 function render_embed($queryData) {
-  // Alternative iframe method:
-  // $html = '<iframe src="'.$queryURL.'" width="1024" height="876"></iframe>';
-
   $wikidataURL = 'https://query.wikidata.org';
   $queryURL = $wikidataURL . '/embed.html';
+
+
+  // Simple iframe method:
+  //
+  // return '<head><link rel="stylesheet" href="data-style.css"></head>'
+  //   . '<body class="iframe-method">'
+  //   . '<h1><span>' . $queryData['title'] . '</span></h1>'
+  //   . '<iframe src="' . $queryURL . '#' . rawurlencode(trim($queryData['query'])) . '" width="1024" height="876" frameborder="0"></iframe>'
+  //   . '<img alt="powered by Wikidata" id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">'
+  //   . '</body>';
+
+
+  // Complex fetch-replace method:
 
   // Fetch embed html
   $opts = [
@@ -363,9 +383,7 @@ function render_embed($queryData) {
   $html = str_replace('<body>', '<body>' . $bodyPrepend, $html);
 
   // Add Logo
-  $bodyAppend = '<img id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
-
-  // Absolute URL
+  $bodyAppend = '<img alt="powered by Wikidata" id="logo" src="res/842px-Wikidata_Stamp_Rec_Light.svg.png">';
   $html = str_replace('</body>', $bodyAppend . '</body>', $html);
 
   return $html;
