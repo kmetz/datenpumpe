@@ -648,17 +648,18 @@ SPARQL
     'title' => 'Herkunft von Nobelpreisträgern',
     'query' => <<<SPARQL
 #defaultView:BubbleChart
-SELECT ?countryLabel (COUNT(?person) AS ?Preisträger)
+SELECT ?CountryLabel (COUNT(?Person) AS ?Preisträger)
 WHERE
 {
-  ?person wdt:P166/wdt:P31? wd:Q7191;
-          wdt:P19 ?place.
-  ?place wdt:P17 ?country.
+  ?NobelPrize wdt:P279?/wdt:P31? wd:Q7191 .
+  ?Person wdt:P166? ?NobelPrize ;
+          wdt:P19 ?Place .
+  ?Place wdt:P17 ?Country .
   SERVICE wikibase:label {
-  bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
   }
 }
-GROUP BY ?countryLabel
+GROUP BY ?CountryLabel
 ORDER BY DESC(?Preisträger)
 SPARQL
   ],
