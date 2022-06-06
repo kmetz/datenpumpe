@@ -446,6 +446,7 @@ SPARQL
   ],
 
 
+  /**
   [
     'type' => 'embed',
     'title' => 'Tragezeiten von Säugetieren',
@@ -496,6 +497,7 @@ WHERE
 GROUP BY ?genus
 SPARQL
   ],
+   **/
 
   [
     'type' => 'embed',
