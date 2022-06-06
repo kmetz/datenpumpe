@@ -59,7 +59,7 @@ SPARQL
     'title' => 'Nur 12 internationale Flughäfen sind nach Frauen benannt',
     'query' => <<<SPARQL
 SELECT ?airport ?airportLabel ?location ?person ?personLabel (?gender AS ?layer) WHERE {
-  ?airport wdt:P31/wdt:P279* wd:Q644371;
+  ?airport wdt:P31/wdt:P279* wd:Q1248784;
             wdt:P625 ?location;
             wdt:P138 ?person.
   ?person wdt:P31 wd:Q5.
@@ -73,13 +73,13 @@ SELECT ?airport ?airportLabel ?location ?person ?personLabel (?gender AS ?layer)
   }
   OPTIONAL {
     ?person wdt:P21 ?gender.
-      MINUS { ?gender wdt:P279* wd:Q6581097. }
+    MINUS { ?gender wdt:P279* wd:Q6581097. }
     MINUS { ?gender wdt:P279* wd:Q6581072. }
     FILTER(!ISBLANK(?gender))
     BIND("other"@en AS ?other)
   }
   BIND(COALESCE(?female, ?male, ?other, "unknown"@en) AS ?gender)
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 SPARQL
   ],
@@ -666,5 +666,106 @@ ORDER BY DESC(?Preisträger)
 SPARQL
   ],
 
+
+  [
+    'type' => 'images',
+    'title' => 'Gemälde im Louvre',
+    'query' => <<<SPARQL
+SELECT ?label ?image WHERE {
+  ?item wdt:P195 wd:Q3044768 .
+  ?item wdt:P18 ?image .
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,en" . 
+    ?item rdfs:label ?label .
+  }
+}
+ORDER BY MD5(CONCAT(STR(NOW()), STR(?label))) # simulate random order
+SPARQL
+  ],
+
+
+  [
+    'type' => 'embed',
+    'title' => 'Zeitleiste der Raumsonden',
+    'query' => <<<SPARQL
+#defaultView:Timeline
+  SELECT ?image ?launchdate ?itemLabel
+    WHERE
+{
+  ?item wdt:P31 wd:Q26529 .
+   ?item wdt:P619 ?launchdate .
+  OPTIONAL { ?item wdt:P18 ?image }
+   SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+}
+SPARQL
+  ],
+
+
+  [
+    'type' => 'map',
+    'title' => 'Steckdosentypen weltweit',
+    'query' => <<<SPARQL
+SELECT ?geoshape ?coord (?plugLabel AS ?layer) WHERE {
+  ?country wdt:P2853 ?plug ;
+           wdt:P3896 ?geoshape ;
+           wdt:P625 ?coord .
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,en" .
+    ?plug rdfs:label ?plugLabel.
+  }
+}
+ORDER BY ?plugLabel
+SPARQL
+  ],
+
+
+  [
+    'type' => 'embed',
+    'title' => 'Länge von Filmen nach Datum',
+    'query' => <<<SPARQL
+#defaultView:LineChart
+SELECT ?year (AVG(?durationInMinutes) AS ?avgDurationInMinutes) ?genreLabel WHERE {
+  {
+    SELECT ?genre WHERE {
+      ?film wdt:P31/wdt:P279* wd:Q11424;
+            wdt:P136 ?genre.
+    }
+    GROUP BY ?genre
+    ORDER BY DESC(COUNT(DISTINCT ?film))
+    LIMIT 25
+  }
+  ?film wdt:P31/wdt:P279* wd:Q11424;
+        wdt:P577 ?date;
+        p:P2047/psn:P2047/wikibase:quantityAmount ?durationInSeconds;
+        wdt:P136 ?genre.
+  FILTER(?durationInMinutes < 60*24) # I take the editorial liberty to exclude these films (some stupidly long documentaries), because they just absurdly skew the averages
+  BIND(STR(YEAR(?date)) AS ?year)
+  BIND(?durationInSeconds/60 AS ?durationInMinutes)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+}
+GROUP BY ?year ?genreLabel
+HAVING(COUNT(DISTINCT ?film) >= 10)
+
+SPARQL
+  ],
+
+
+  [
+    'type' => 'map',
+    'title' => 'Erdbeben und Kernkraftwerke',
+    'query' => <<<SPARQL
+SELECT ?event ?eventLabel ?coordinates ?layer WHERE {
+  {
+    ?event wdt:P31/wdt:P279* wd:Q7944;
+                wdt:P625 ?coordinates.
+    BIND("Erdbeben"@de AS ?layer)
+  } UNION {
+    ?event wdt:P31/wdt:P279* wd:Q134447;
+           wdt:P625 ?coordinates.
+    BIND("Kernkraftwerk"@de AS ?layer)
+  }
+}
+SPARQL
+  ],
 
 ];
