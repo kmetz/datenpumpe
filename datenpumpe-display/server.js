@@ -122,7 +122,7 @@ function downloadContent(count) {
   })
 }
 
-// Enshure we have enough content
+// Ensure we have enough content
 exec('cd ' + __dirname + '/content;' + 'ls -d1 *.png | wc -l', (err, stdout) => {
   if (!err) {
     let existing = parseInt(stdout.trim());
