@@ -768,4 +768,18 @@ SELECT ?event ?eventLabel ?coordinates ?layer WHERE {
 SPARQL
   ],
 
+  [
+    'type' => 'images',
+    'title' => 'Welche Gemälde zeigen Regenbogen?',
+    'query' => <<<SPARQL
+SELECT ?painting ?paintingLabel ?painter ?painterLabel ?image WHERE {
+  ?painting wdt:P180 wd:Q1052;
+            wdt:P170 ?painter;
+            wdt:P18 ?image.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY MD5(CONCAT(STR(NOW()), STR(?flag)))
+SPARQL
+  ],
+
 ];
