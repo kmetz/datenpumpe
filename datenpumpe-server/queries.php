@@ -216,13 +216,13 @@ SPARQL
 
   [
     'type' => 'singleValue',
-    'title' => 'Wie alt sind Mitglieder des 19. Bundestags durchschnittlich?',
+    'title' => 'Wie alt sind Mitglieder des 20. Bundestags durchschnittlich?',
     'query' => <<<SPARQL
 SELECT (AVG(?age) AS ?avgAge) WHERE {
 ?mdb wdt:P31 wd:Q5;
      p:P39 [
 ps:P39 wd:Q1939555;
-       pq:P2937 wd:Q30579723
+       pq:P2937 wd:Q33091469
      ];
      wdt:P569 ?dob.
   BIND(FLOOR((NOW() - ?dob)/365.2425) AS ?age)
