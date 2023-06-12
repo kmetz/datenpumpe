@@ -121,97 +121,62 @@ SPARQL
     'title' => 'Most inherited professions',
     'query' => <<<SPARQL
 #defaultView:BubbleChart
-SELECT ?occupation ?occupationLabel ?count WHERE {
-  VALUES (?occupation ?occupationLabel ?count) {
-    (<http://www.wikidata.org/entity/Q6606110> "industrialist"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1415090> "film score composer"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q593362> "draper"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1937431> "organ builder"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1941338> "burgess"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q16387970> "Q16387970" "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q66495020> "estate owner"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q11620114> "kadōka"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q189290> "military officer"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q947305> "skald"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q81096> "engineer"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q639669> "musician"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q16533> "judge"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q11900058> "explorer"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q4122737> "Vogt"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q593644> "chemist"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q11063> "astronomer"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2259451> "stage actor"@en "1"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q482980> "author"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q219477> "missionary"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q11513337> "athletics competitor"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q955464> "parson"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1622272> "university teacher"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1234713> "theologian"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q211423> "goldsmith"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q193391> "diplomat"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q500251> "ship-owner"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q765778> "organist"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1416611> "postmaster"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q512314> "socialite"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q372436> "statesperson"@en "2"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1463475> "mintmaster"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1688932> "jiedushi"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q12826225> "Lord"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q36180> "writer"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q715222> "lady-in-waiting"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2374149> "botanist"@en "3"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q618532> "landlord"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q39631> "physician"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2516866> "publisher"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q854997> "Bhikkhu"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1402561> "military leader"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q175151> "printer"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q3303330> "calligrapher"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q10732476> "art collector"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q42973> "architect"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1279683> "Nasi"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q10800557> "film actor"@en "4"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q3303297> "ironmaster"@en "5"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q42603> "priest"@en "5"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q49757> "poet"@en "5"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q4964182> "philosopher"@en "6"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q102083> "knight"@en "6"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q40348> "lawyer"@en "6"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1250916> "warrior"@en "7"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1934684> "homemaker"@en "8"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q215536> "merchant"@en "8"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q40881196> "printer-bookseller"@en "10"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1483709> "land owner"@en "10"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q131524> "entrepreneur"@en "11"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2928765> "busshi"@en "12"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1281618> "sculptor"@en "12"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q3519259> "count"@en "14"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q36834> "composer"@en "15"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q12097> "king"@en "16"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q844586> "gentry"@en "17"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q43845> "businessperson"@en "17"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q131512> "farmer"@en "20"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q48146261> "kabuki actor"@en "22"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q133485> "rabbi"@en "24"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q16744001> "noble"@en "30"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q33999> "actor"@en "30"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1028181> "painter"@en "36"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q806798> "banker"@en "46"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q47064> "military personnel"@en "48"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q38142> "samurai"@en "49"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q273108> "condottiero"@en "55"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q98103687> "Ancient Roman military personnel"@en "64"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q11545923> "military commander"@en "74"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1975935> "bushi"@en "80"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1409420> "feudatory"@en "83"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q97667506> "Ancient Roman politician"@en "103"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1097498> "ruler"@en "109"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q1062083> "billionaire"@en "131"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2304859> "sovereign"@en "158"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q116> "monarch"@en "265"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q2478141> "aristocrat"@en "1061"^^<http://www.w3.org/2001/XMLSchema#integer>)
-    (<http://www.wikidata.org/entity/Q82955> "politician"@en "2081"^^<http://www.w3.org/2001/XMLSchema#integer>)
+SELECT ?occupation ?occupationLabel ?count WITH {
+  SELECT ?occupation (COUNT(DISTINCT ?person1) AS ?count) WHERE {
+    wd:Q5 ^wdt:P31 ?person1, ?person2, ?person3, ?person4, ?person5.
+    ?person1 wdt:P22|wdt:P25 ?person2.
+    ?person2 wdt:P22|wdt:P25 ?person3.
+    ?person3 wdt:P22|wdt:P25 ?person4.
+    ?person4 wdt:P22|wdt:P25 ?person5.
+    
+    ?occupation ^wdt:P106 ?person1, ?person2, ?person3, ?person4, ?person5.
   }
+  GROUP BY ?occupation ?occupationLabel
+} AS %results WHERE {
+  INCLUDE %results  .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+SPARQL
+  ],
+
+
+  [
+    'type' => 'images',
+    'title' => 'Selection of early women’s art',
+    'query' => <<<SPARQL
+#defaultView:ImageGrid
+SELECT ?image ?artistLabel ?artLabel ?date WHERE {
+  {
+    SELECT (SAMPLE(?image) AS ?image) ?artist ?art (YEAR(MIN(?date)) AS ?date) WHERE {
+    ?art wdt:P170 ?artist;
+           wdt:P18 ?image;
+           wdt:P571 ?date.
+      ?artist wdt:P31 wd:Q5.
+      { ?artist wdt:P21 wd:Q6581072. } UNION { ?artist wdt:P21 wd:Q1052281. } # using ?artist wdt:P21/wdt:P279? wd:Q6581072 instead would be nice, but is unfortunately too inefficient
+    }
+    GROUP BY ?artist ?art
+    ORDER BY ASC(?date)
+    LIMIT 20
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+ORDER BY MD5(CONCAT(STR(NOW()), STR(?art))) # simulate random order – ORDER BY RAND() doesn’t have the desired effect
+LIMIT 20
+SPARQL
+  ],
+
+
+  [
+    'type' => 'map',
+    'title' => 'Auf "ing" endende Ortschaften in Deutschland',
+    'query' => <<<SPARQL
+#defaultView:Map
+SELECT ?item ?name ?itemCoords WHERE {
+  ?item wdt:P31 wd:Q262166;
+        rdfs:label ?name.
+  FILTER(LANG(?name) = "de")
+  FILTER(STRENDS(?name, "ing"@de))
+  ?item wdt:P625 ?itemCoords.
 }
 SPARQL
   ],
@@ -313,65 +278,49 @@ SPARQL
     'query' => <<<SPARQL
 # UK parliaments with count of Johns and count of women
 #defaultView:LineChart
-SELECT ?date ?count ?label WHERE {
-  VALUES (?date ?count ?label) {
-    ("1919-02-11T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "79"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1919-02-11T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "3"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1922-11-23T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "3"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1922-11-23T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "60"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1924-01-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "50"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1924-01-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "8"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1924-12-09T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "51"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1924-12-09T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "10"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1929-07-02T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "52"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1929-07-02T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "16"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1931-11-10T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "57"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1931-11-10T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "15"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1935-12-03T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "76"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1935-12-03T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "15"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1945-08-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "56"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1945-08-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "26"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1950-03-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "52"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1950-03-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "21"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1951-11-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "21"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1951-11-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "53"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1955-06-09T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "63"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1955-06-09T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "28"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1959-10-27T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "74"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1959-10-27T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "26"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1964-11-03T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "29"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1964-11-03T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "55"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1966-04-21T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "58"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1966-04-21T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "28"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1970-07-02T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "62"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1970-07-02T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "28"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1974-03-12T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "23"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1974-03-12T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "60"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1974-10-29T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "66"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1974-10-29T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "28"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1979-05-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "68"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1979-05-15T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "23"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1983-06-22T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "62"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1983-06-22T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "28"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1987-06-25T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "44"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1987-06-25T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "61"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1992-05-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "65"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("1992-05-06T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "56"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1997-05-14T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "47"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("1997-05-14T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "122"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2001-06-20T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "119"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2001-06-20T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "43"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2005-05-17T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "129"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2005-05-17T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "41"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2010-05-25T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "25"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2010-05-25T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "149"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2015-05-27T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "20"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2015-05-27T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "197"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2017-06-21T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "20"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2017-06-21T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "213"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
-    ("2019-12-19T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "19"^^<http://www.w3.org/2001/XMLSchema#integer> "Johns"@en)
-    ("2019-12-19T00:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> "229"^^<http://www.w3.org/2001/XMLSchema#integer> "women"@en)
+SELECT ?date ?count ?label WITH {
+  # all MPs with their associated parliament
+  SELECT DISTINCT ?mp ?parliament WHERE {
+    ?mp wdt:P31 wd:Q5.
+    {
+      # new data model: position held – Member of the nth Parliament of the United Kingdom
+      ?mp p:P39/ps:P39 ?position.
+      ?position wdt:P279 wd:Q16707842;
+                p:P279/pq:P2937|wdt:P2937 ?parliament.
+    } UNION {
+      # old data model: member of – nth Parliament of the United Kingdom
+      ?mp p:P463/ps:P463 ?parliament.
+      ?parliament wdt:P31 wd:Q21094819.
+    }
   }
+} AS %MPsWithParliament WITH {
+  # count of Johns in each parliament
+  SELECT ?parliament (COUNT(DISTINCT ?mp) AS ?johns) WHERE {
+    INCLUDE %MPsWithParliament.
+    ?mp wdt:P735 wd:Q4925477.
+  }
+  GROUP BY ?parliament
+} AS %johns WITH {
+  # count of women in each parliament
+  SELECT ?parliament (COUNT(DISTINCT ?mp) AS ?women) WHERE {
+    INCLUDE %MPsWithParliament.
+    ?mp wdt:P21/wdt:P279* wd:Q6581072. # (P279*: include transgender women – none yet, but will probably happen in the future)
+  }
+  GROUP BY ?parliament
+} AS %women WHERE {
+  # get ?johns and ?women
+  INCLUDE %johns.
+  INCLUDE %women.
+  # fan out single result
+  # ?parliament ?johns ?women
+  # into two results
+  # ?parliament "Johns" ?johns
+  # ?parliament "women" ?women
+  # so the line chart works
+  VALUES ?label { "Johns"@en "women"@en }
+  BIND(IF(?label = "Johns"@en, ?johns, ?women) AS ?count)
+  # get parliament date for the chart
+  ?parliament wdt:P571|wdt:P580 ?date
 }
 SPARQL
   ],
